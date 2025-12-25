@@ -62,12 +62,12 @@ export function UserMenu() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            className="gap-2 text-muted-foreground"
+            className="gap-2 border-primary/50 hover:border-primary hover:bg-primary/10"
           >
             <User className="w-4 h-4" />
-            <span className="hidden md:inline">Track Progress</span>
+            <span className="hidden md:inline">Sign In</span>
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

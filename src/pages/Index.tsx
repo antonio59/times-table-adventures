@@ -1,7 +1,22 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calculator, Gamepad2, FileText, Star, Sparkles, BookOpen, Zap, HelpCircle, Layers, Lightbulb } from "lucide-react";
+import {
+  Calculator,
+  Gamepad2,
+  FileText,
+  Star,
+  Sparkles,
+  BookOpen,
+  Zap,
+  HelpCircle,
+  Layers,
+  Lightbulb,
+  Trophy,
+  User,
+} from "lucide-react";
 import Layout from "@/components/layout/Layout";
+import { useUser } from "@/contexts/UserContext";
+import { UserMenu } from "@/components/UserMenu";
 
 const FeatureCard = ({
   icon: Icon,
@@ -29,10 +44,10 @@ const FeatureCard = ({
             variant === "default"
               ? "gradient-primary"
               : variant === "secondary"
-              ? "gradient-secondary"
-              : variant === "fun"
-              ? "gradient-fun"
-              : "gradient-success"
+                ? "gradient-secondary"
+                : variant === "fun"
+                  ? "gradient-fun"
+                  : "gradient-success"
           } shadow-soft group-hover:scale-110 transition-transform duration-300`}
         >
           <Icon className="w-7 h-7 text-primary-foreground" />
@@ -45,16 +60,69 @@ const FeatureCard = ({
 );
 
 const Index = () => {
+  const { isLoggedIn, userName, userAvatar } = useUser();
+
   return (
     <Layout>
       <div className="max-w-5xl mx-auto">
+        {/* Sign Up Banner - only show if not logged in */}
+        {!isLoggedIn && (
+          <section className="mb-6">
+            <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 rounded-2xl p-4 md:p-6 border border-primary/20">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3 text-center md:text-left">
+                  <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center">
+                    <Trophy className="w-6 h-6 text-secondary" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg">Track Your Progress!</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Create a profile to save scores, earn achievements, and
+                      see which tables you've mastered.
+                    </p>
+                  </div>
+                </div>
+                <UserMenu />
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Welcome back banner - show if logged in */}
+        {isLoggedIn && (
+          <section className="mb-6">
+            <div className="bg-gradient-to-r from-success/10 to-success/5 rounded-2xl p-4 border border-success/20">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{userAvatar}</span>
+                  <div>
+                    <p className="font-bold">
+                      Welcome back,{" "}
+                      <span className="capitalize">{userName}</span>!
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Ready to practice today?
+                    </p>
+                  </div>
+                </div>
+                <Link to="/progress">
+                  <Button variant="outline" size="sm">
+                    <Trophy className="w-4 h-4" />
+                    View Progress
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Hero Section */}
         <section className="text-center py-8 md:py-12">
           <div className="inline-flex items-center gap-2 bg-secondary/20 text-secondary-foreground px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-float">
             <Star className="w-4 h-4 text-secondary" />
             <span className="text-foreground">Learn & Have Fun!</span>
           </div>
-          
+
           <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
             <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
               Master Your
@@ -62,10 +130,10 @@ const Index = () => {
             <br />
             <span className="text-foreground">Times Tables! 🎉</span>
           </h1>
-          
+
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Become a multiplication superstar with fun games, practice exercises, 
-            and printable worksheets!
+            Become a multiplication superstar with fun games, practice
+            exercises, and printable worksheets!
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
@@ -89,8 +157,10 @@ const Index = () => {
           <h2 className="text-2xl font-bold text-center mb-2">
             🎮 Games & Practice
           </h2>
-          <p className="text-muted-foreground text-center mb-8">Choose how you want to learn today!</p>
-          
+          <p className="text-muted-foreground text-center mb-8">
+            Choose how you want to learn today!
+          </p>
+
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <FeatureCard
               icon={Star}
@@ -148,8 +218,10 @@ const Index = () => {
           <h2 className="text-2xl font-bold text-center mb-2">
             📚 Learning Tools
           </h2>
-          <p className="text-muted-foreground text-center mb-8">Reference materials and resources</p>
-          
+          <p className="text-muted-foreground text-center mb-8">
+            Reference materials and resources
+          </p>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <FeatureCard
               icon={Calculator}
@@ -192,7 +264,9 @@ const Index = () => {
                 <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-secondary to-secondary/70 bg-clip-text text-transparent">
                   144
                 </div>
-                <p className="text-sm text-muted-foreground">Multiplication Facts</p>
+                <p className="text-sm text-muted-foreground">
+                  Multiplication Facts
+                </p>
               </div>
               <div>
                 <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">

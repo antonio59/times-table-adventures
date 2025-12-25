@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 import { useUser, GameSession, TableResult } from "@/contexts/UserContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,10 +38,16 @@ export function SaveProgressPrompt({
   tableResults = [],
   onClose,
 }: SaveProgressPromptProps) {
-  const { login, recordGame } = useUser();
+  const { loginWithId } = useUser();
   const [name, setName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState("🦊");
   const [isSaving, setIsSaving] = useState(false);
+
+  // Call Convex mutations directly to avoid React state timing issues
+  const getOrCreateUser = useMutation(api.users.getOrCreateUser);
+  const recordSession = useMutation(api.gameSessions.recordSession);
+  const updateMasteryBatch = useMutation(api.tableMastery.updateMasteryBatch);
+  const checkAchievements = useMutation(api.achievements.checkAchievements);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,15 +55,41 @@ export function SaveProgressPrompt({
 
     setIsSaving(true);
     try {
-      // Login first
-      await login(name.trim(), selectedAvatar);
+      // Create user and get ID directly from mutation
+      const userId = await getOrCreateUser({
+        name: name.trim(),
+        avatar: selectedAvatar,
+      });
 
-      // Small delay to ensure userId is set
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Record the session with the userId we just got
+      await recordSession({
+        userId,
+        gameType: session.gameType,
+        tablesUsed: session.tablesUsed,
+        score: session.score,
+        totalQuestions: session.totalQuestions,
+        correctAnswers: session.correctAnswers,
+        bestStreak: session.bestStreak,
+        timeSpent: session.timeSpent,
+      });
 
-      // Record the game - we need to call this after login completes
-      // The recordGame function will now have the userId
-      const newAchievements = await recordGame(session, tableResults);
+      // Record table mastery if provided
+      if (tableResults.length > 0) {
+        await updateMasteryBatch({
+          userId,
+          results: tableResults,
+        });
+      }
+
+      // Check for achievements
+      const newAchievements = await checkAchievements({
+        userId,
+        gameType: session.gameType,
+        score: session.score,
+        totalQuestions: session.totalQuestions,
+        correctAnswers: session.correctAnswers,
+        bestStreak: session.bestStreak,
+      });
 
       if (newAchievements.length > 0) {
         newAchievements.forEach((type) => {
@@ -65,9 +99,13 @@ export function SaveProgressPrompt({
         });
       }
 
+      // Update the user context with the new user
+      loginWithId(userId, name.trim(), selectedAvatar);
+
       toast.success("Progress saved!");
       onClose();
     } catch (error) {
+      console.error("Failed to save progress:", error);
       toast.error("Failed to save. Try again!");
     } finally {
       setIsSaving(false);

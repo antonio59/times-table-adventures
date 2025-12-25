@@ -46,6 +46,7 @@ interface UserContextType {
   isLoggedIn: boolean;
   pendingSession: PendingSession | null;
   login: (name: string, avatar?: string) => Promise<void>;
+  loginWithId: (id: Id<"users">, name: string, avatar?: string) => void;
   logout: () => void;
   recordGame: (
     session: GameSession,
@@ -117,6 +118,21 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(USER_STORAGE_KEY);
   }, []);
 
+  // Login with an existing user ID (used by SaveProgressPrompt after direct mutation)
+  const loginWithId = useCallback(
+    (id: Id<"users">, name: string, avatar?: string) => {
+      const normalizedName = name.toLowerCase().trim();
+      setUserId(id);
+      setUserName(normalizedName);
+      setUserAvatar(avatar ?? null);
+      localStorage.setItem(
+        USER_STORAGE_KEY,
+        JSON.stringify({ name: normalizedName, avatar, id }),
+      );
+    },
+    [],
+  );
+
   const recordGame = useCallback(
     async (
       session: GameSession,
@@ -184,6 +200,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         isLoggedIn: !!userId,
         pendingSession,
         login,
+        loginWithId,
         logout,
         recordGame,
         setPendingSession,
