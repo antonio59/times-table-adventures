@@ -1,6 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calculator, Gamepad2, FileText, Home, Lightbulb } from "lucide-react";
+import { UserMenu } from "@/components/UserMenu";
+import {
+  Calculator,
+  Gamepad2,
+  FileText,
+  Home,
+  Lightbulb,
+  Trophy,
+} from "lucide-react";
 
 const Header = () => {
   const location = useLocation();
@@ -10,7 +18,7 @@ const Header = () => {
     { path: "/tables", label: "Tables", icon: Calculator },
     { path: "/quiz", label: "Games", icon: Gamepad2 },
     { path: "/tips", label: "Tips", icon: Lightbulb },
-    { path: "/print", label: "Print", icon: FileText },
+    { path: "/progress", label: "Progress", icon: Trophy },
   ];
 
   return (
@@ -33,7 +41,11 @@ const Header = () => {
                   <Button
                     variant={isActive ? "default" : "ghost"}
                     size="sm"
-                    className={isActive ? "" : "text-muted-foreground hover:text-foreground"}
+                    className={
+                      isActive
+                        ? ""
+                        : "text-muted-foreground hover:text-foreground"
+                    }
                   >
                     <Icon className="w-4 h-4" />
                     <span className="hidden md:inline">{item.label}</span>
@@ -41,6 +53,7 @@ const Header = () => {
                 </Link>
               );
             })}
+            <UserMenu />
           </nav>
         </div>
       </div>

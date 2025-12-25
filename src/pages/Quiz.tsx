@@ -1,6 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { useUser } from "@/contexts/UserContext";
+import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
+import { toast } from "sonner";
 import { Play, Trophy, Star, Clock, RotateCcw, Check } from "lucide-react";
 
 interface Question {
@@ -25,7 +28,7 @@ const generateQuestion = (selectedTables: number[]): Question => {
   }
 
   const options = [...Array.from(wrongOptions), answer].sort(
-    () => Math.random() - 0.5
+    () => Math.random() - 0.5,
   );
 
   return { a, b, answer, options };
@@ -34,6 +37,7 @@ const generateQuestion = (selectedTables: number[]): Question => {
 type GameState = "idle" | "playing" | "finished";
 
 const Quiz = () => {
+  const { isLoggedIn, recordGame } = useUser();
   const [gameState, setGameState] = useState<GameState>("idle");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -43,13 +47,22 @@ const Quiz = () => {
   const [showCorrect, setShowCorrect] = useState(false);
   const [selectedTables, setSelectedTables] = useState<number[]>([2]);
   const [timePerQuestion, setTimePerQuestion] = useState<number>(10);
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [tableResults, setTableResults] = useState<
+    { tableNumber: number; correct: boolean; timeMs: number }[]
+  >([]);
+  const [showSavePrompt, setShowSavePrompt] = useState(false);
+  const [hasRecorded, setHasRecorded] = useState(false);
+  const questionStartTime = useRef<number>(Date.now());
+  const gameStartTime = useRef<number>(Date.now());
 
   const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   const toggleTable = (table: number) => {
     setSelectedTables((prev) => {
       if (prev.includes(table)) {
-        if (prev.length === 1) return prev; // Keep at least one selected
+        if (prev.length === 1) return prev;
         return prev.filter((t) => t !== table);
       }
       return [...prev, table].sort((a, b) => a - b);
@@ -64,14 +77,21 @@ const Quiz = () => {
   const startGame = useCallback(() => {
     const questionCount = 10;
     const newQuestions = Array.from({ length: questionCount }, () =>
-      generateQuestion(selectedTables)
+      generateQuestion(selectedTables),
     );
     setQuestions(newQuestions);
     setCurrentIndex(0);
     setScore(0);
+    setStreak(0);
+    setBestStreak(0);
     setTimeLeft(questionCount * timePerQuestion);
     setSelectedAnswer(null);
     setShowCorrect(false);
+    setTableResults([]);
+    setHasRecorded(false);
+    setShowSavePrompt(false);
+    gameStartTime.current = Date.now();
+    questionStartTime.current = Date.now();
     setGameState("playing");
   }, [selectedTables, timePerQuestion]);
 
@@ -96,11 +116,23 @@ const Quiz = () => {
 
     setSelectedAnswer(answer);
     const isCorrect = answer === questions[currentIndex].answer;
+    const timeMs = Date.now() - questionStartTime.current;
+
+    setTableResults((prev) => [
+      ...prev,
+      { tableNumber: questions[currentIndex].a, correct: isCorrect, timeMs },
+    ]);
 
     if (isCorrect) {
       setScore((prev) => prev + 1);
+      setStreak((prev) => {
+        const newStreak = prev + 1;
+        if (newStreak > bestStreak) setBestStreak(newStreak);
+        return newStreak;
+      });
     } else {
       setShowCorrect(true);
+      setStreak(0);
     }
 
     setTimeout(() => {
@@ -108,6 +140,7 @@ const Quiz = () => {
         setCurrentIndex((prev) => prev + 1);
         setSelectedAnswer(null);
         setShowCorrect(false);
+        questionStartTime.current = Date.now();
       } else {
         setGameState("finished");
       }
@@ -121,6 +154,56 @@ const Quiz = () => {
     if (percentage >= 50) return 1;
     return 0;
   };
+
+  const getGameSession = useCallback(
+    () => ({
+      gameType: "quiz" as const,
+      tablesUsed: selectedTables,
+      score,
+      totalQuestions: questions.length,
+      correctAnswers: score,
+      bestStreak,
+      timeSpent: Math.round((Date.now() - gameStartTime.current) / 1000),
+    }),
+    [selectedTables, score, questions.length, bestStreak],
+  );
+
+  // Record game when finished (only if logged in)
+  useEffect(() => {
+    if (gameState !== "finished" || hasRecorded) return;
+
+    if (isLoggedIn) {
+      const recordResults = async () => {
+        const newAchievements = await recordGame(
+          getGameSession(),
+          tableResults,
+        );
+        setHasRecorded(true);
+
+        if (newAchievements.length > 0) {
+          newAchievements.forEach((type) => {
+            toast.success(`Achievement Unlocked: ${type.replace(/_/g, " ")}!`, {
+              icon: "🏆",
+            });
+          });
+        }
+      };
+      recordResults();
+    } else {
+      // Show save prompt for non-logged-in users after a short delay
+      const timer = setTimeout(() => {
+        setShowSavePrompt(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [
+    gameState,
+    isLoggedIn,
+    hasRecorded,
+    recordGame,
+    getGameSession,
+    tableResults,
+  ]);
 
   return (
     <Layout>
@@ -137,17 +220,20 @@ const Quiz = () => {
             </div>
 
             <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
-              <h2 className="text-xl font-bold mb-2">Which tables do you know?</h2>
+              <h2 className="text-xl font-bold mb-2">
+                Which tables do you know?
+              </h2>
               <p className="text-sm text-muted-foreground mb-4">
                 Click individual tables or use the quick select buttons below
               </p>
 
-              {/* Individual table selection */}
               <div className="flex flex-wrap justify-center gap-2 mb-4">
                 {allTables.map((table) => (
                   <Button
                     key={table}
-                    variant={selectedTables.includes(table) ? "default" : "game"}
+                    variant={
+                      selectedTables.includes(table) ? "default" : "game"
+                    }
                     size="sm"
                     onClick={() => toggleTable(table)}
                     className="w-12 h-12 text-lg font-bold relative"
@@ -160,9 +246,10 @@ const Quiz = () => {
                 ))}
               </div>
 
-              {/* Quick select buttons */}
               <div className="flex flex-wrap justify-center gap-2 mb-6">
-                <p className="w-full text-xs text-muted-foreground mb-1">Quick select up to:</p>
+                <p className="w-full text-xs text-muted-foreground mb-1">
+                  Quick select up to:
+                </p>
                 {[2, 3, 4, 5, 6, 10, 12].map((table) => (
                   <Button
                     key={table}
@@ -176,7 +263,6 @@ const Quiz = () => {
                 ))}
               </div>
 
-              {/* Time selection */}
               <h2 className="text-lg font-bold mb-2">Time per question</h2>
               <div className="flex flex-wrap justify-center gap-2 mb-6">
                 {[5, 10, 15, 20].map((seconds) => (
@@ -214,7 +300,6 @@ const Quiz = () => {
 
         {gameState === "playing" && questions[currentIndex] && (
           <div>
-            {/* Progress Bar */}
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-semibold">
@@ -222,7 +307,9 @@ const Quiz = () => {
                 </span>
                 <span
                   className={`text-sm font-bold flex items-center gap-1 ${
-                    timeLeft <= 10 ? "text-destructive animate-pulse" : "text-muted-foreground"
+                    timeLeft <= 10
+                      ? "text-destructive animate-pulse"
+                      : "text-muted-foreground"
                   }`}
                 >
                   <Clock className="w-4 h-4" />
@@ -239,7 +326,6 @@ const Quiz = () => {
               </div>
             </div>
 
-            {/* Score */}
             <div className="text-center mb-4">
               <span className="inline-flex items-center gap-2 bg-success/20 text-success px-4 py-2 rounded-full font-bold">
                 <Star className="w-4 h-4" />
@@ -247,7 +333,6 @@ const Quiz = () => {
               </span>
             </div>
 
-            {/* Question Card */}
             <div className="bg-card rounded-3xl p-8 shadow-card border border-border mb-6">
               <div className="text-center mb-8">
                 <div className="text-5xl md:text-6xl font-extrabold">
@@ -272,10 +357,10 @@ const Quiz = () => {
                         showAsCorrect
                           ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
                           : showAsWrong
-                          ? "!border-destructive !bg-destructive/10"
-                          : isSelected && isCorrectAnswer
-                          ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
-                          : ""
+                            ? "!border-destructive !bg-destructive/10"
+                            : isSelected && isCorrectAnswer
+                              ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
+                              : ""
                       }`}
                       onClick={() => handleAnswer(option)}
                       disabled={selectedAnswer !== null}
@@ -315,10 +400,10 @@ const Quiz = () => {
                 {getStarRating() === 3
                   ? "Amazing! You're a multiplication master! 🎉"
                   : getStarRating() === 2
-                  ? "Great job! Keep practicing! 💪"
-                  : getStarRating() === 1
-                  ? "Good effort! You're getting there! 🌟"
-                  : "Keep practicing, you'll improve! 📚"}
+                    ? "Great job! Keep practicing! 💪"
+                    : getStarRating() === 1
+                      ? "Good effort! You're getting there! 🌟"
+                      : "Keep practicing, you'll improve! 📚"}
               </p>
 
               <div className="flex flex-wrap justify-center gap-3">
@@ -338,6 +423,17 @@ const Quiz = () => {
           </div>
         )}
       </div>
+
+      {showSavePrompt && (
+        <SaveProgressPrompt
+          session={getGameSession()}
+          tableResults={tableResults}
+          onClose={() => {
+            setShowSavePrompt(false);
+            setHasRecorded(true);
+          }}
+        />
+      )}
     </Layout>
   );
 };

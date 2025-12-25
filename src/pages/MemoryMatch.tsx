@@ -1,6 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { useUser } from "@/contexts/UserContext";
+import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
+import { toast } from "sonner";
 import { Sparkles, Play, Trophy, RotateCcw } from "lucide-react";
 
 interface Card {
@@ -13,13 +16,19 @@ interface Card {
 }
 
 const MemoryMatch = () => {
+  const { isLoggedIn, recordGame } = useUser();
   const [selectedTables, setSelectedTables] = useState<number[]>([2, 3]);
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
   const [matches, setMatches] = useState(0);
-  const [gameState, setGameState] = useState<"idle" | "playing" | "finished">("idle");
+  const [gameState, setGameState] = useState<"idle" | "playing" | "finished">(
+    "idle",
+  );
   const [isChecking, setIsChecking] = useState(false);
+  const [showSavePrompt, setShowSavePrompt] = useState(false);
+  const [hasRecorded, setHasRecorded] = useState(false);
+  const gameStartTime = useRef<number>(Date.now());
 
   const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
@@ -29,19 +38,18 @@ const MemoryMatch = () => {
         if (prev.length === 1) return prev;
         return prev.filter((t) => t !== table);
       }
-      if (prev.length >= 3) return prev; // Max 3 tables for memory game
+      if (prev.length >= 3) return prev;
       return [...prev, table].sort((a, b) => a - b);
     });
   };
 
   const generateCards = useCallback(() => {
     const pairs: { equation: string; answer: number }[] = [];
-    
-    // Generate 6 pairs (12 cards total)
+
     selectedTables.forEach((table) => {
       const usedMultipliers = new Set<number>();
       while (usedMultipliers.size < Math.ceil(6 / selectedTables.length)) {
-        const b = Math.floor(Math.random() * 10) + 2; // 2-11 for variety
+        const b = Math.floor(Math.random() * 10) + 2;
         if (!usedMultipliers.has(b)) {
           usedMultipliers.add(b);
           pairs.push({
@@ -53,10 +61,8 @@ const MemoryMatch = () => {
       }
     });
 
-    // Trim to exactly 6 pairs
     const finalPairs = pairs.slice(0, 6);
 
-    // Create cards array
     const cardArray: Card[] = [];
     finalPairs.forEach((pair, index) => {
       cardArray.push({
@@ -77,7 +83,6 @@ const MemoryMatch = () => {
       });
     });
 
-    // Shuffle
     return cardArray.sort(() => Math.random() - 0.5);
   }, [selectedTables]);
 
@@ -88,24 +93,25 @@ const MemoryMatch = () => {
     setMatches(0);
     setGameState("playing");
     setIsChecking(false);
+    setHasRecorded(false);
+    setShowSavePrompt(false);
+    gameStartTime.current = Date.now();
   }, [generateCards]);
 
   const handleCardClick = (cardId: number) => {
     if (isChecking) return;
-    
+
     const card = cards.find((c) => c.id === cardId);
     if (!card || card.isFlipped || card.isMatched) return;
     if (flippedCards.length >= 2) return;
 
-    // Flip the card
     setCards((prev) =>
-      prev.map((c) => (c.id === cardId ? { ...c, isFlipped: true } : c))
+      prev.map((c) => (c.id === cardId ? { ...c, isFlipped: true } : c)),
     );
 
     const newFlipped = [...flippedCards, cardId];
     setFlippedCards(newFlipped);
 
-    // Check for match when 2 cards are flipped
     if (newFlipped.length === 2) {
       setMoves((prev) => prev + 1);
       setIsChecking(true);
@@ -114,16 +120,14 @@ const MemoryMatch = () => {
       const firstCard = cards.find((c) => c.id === first)!;
       const secondCard = cards.find((c) => c.id === second)!;
 
-      // Update secondCard to be flipped for comparison
       const updatedSecondCard = { ...secondCard, isFlipped: true };
 
       if (firstCard.pairId === updatedSecondCard.pairId) {
-        // Match!
         setTimeout(() => {
           setCards((prev) =>
             prev.map((c) =>
-              c.pairId === firstCard.pairId ? { ...c, isMatched: true } : c
-            )
+              c.pairId === firstCard.pairId ? { ...c, isMatched: true } : c,
+            ),
           );
           setMatches((prev) => {
             const newMatches = prev + 1;
@@ -136,12 +140,11 @@ const MemoryMatch = () => {
           setIsChecking(false);
         }, 500);
       } else {
-        // No match - flip back
         setTimeout(() => {
           setCards((prev) =>
             prev.map((c) =>
-              newFlipped.includes(c.id) ? { ...c, isFlipped: false } : c
-            )
+              newFlipped.includes(c.id) ? { ...c, isFlipped: false } : c,
+            ),
           );
           setFlippedCards([]);
           setIsChecking(false);
@@ -156,6 +159,45 @@ const MemoryMatch = () => {
     if (moves <= 16) return 1;
     return 0;
   };
+
+  const getGameSession = useCallback(
+    () => ({
+      gameType: "memory" as const,
+      tablesUsed: selectedTables,
+      score: matches,
+      totalQuestions: 6,
+      correctAnswers: matches,
+      bestStreak: 0,
+      timeSpent: Math.round((Date.now() - gameStartTime.current) / 1000),
+    }),
+    [selectedTables, matches],
+  );
+
+  // Record game when finished
+  useEffect(() => {
+    if (gameState !== "finished" || hasRecorded) return;
+
+    if (isLoggedIn) {
+      const recordResults = async () => {
+        const newAchievements = await recordGame(getGameSession());
+        setHasRecorded(true);
+
+        if (newAchievements.length > 0) {
+          newAchievements.forEach((type) => {
+            toast.success(`Achievement Unlocked: ${type.replace(/_/g, " ")}!`, {
+              icon: "🏆",
+            });
+          });
+        }
+      };
+      recordResults();
+    } else {
+      const timer = setTimeout(() => {
+        setShowSavePrompt(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [gameState, isLoggedIn, hasRecorded, recordGame, getGameSession]);
 
   return (
     <Layout>
@@ -176,16 +218,21 @@ const MemoryMatch = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 Fewer tables = easier to remember the pairs
               </p>
-              
+
               <div className="flex flex-wrap justify-center gap-2 mb-6">
                 {allTables.map((table) => (
                   <Button
                     key={table}
-                    variant={selectedTables.includes(table) ? "default" : "game"}
+                    variant={
+                      selectedTables.includes(table) ? "default" : "game"
+                    }
                     size="sm"
                     onClick={() => toggleTable(table)}
                     className="w-12 h-12 text-lg font-bold"
-                    disabled={!selectedTables.includes(table) && selectedTables.length >= 3}
+                    disabled={
+                      !selectedTables.includes(table) &&
+                      selectedTables.length >= 3
+                    }
                   >
                     {table}
                   </Button>
@@ -206,7 +253,6 @@ const MemoryMatch = () => {
 
         {gameState === "playing" && (
           <div>
-            {/* Stats */}
             <div className="flex justify-between items-center mb-6">
               <span className="bg-primary/20 text-primary px-4 py-2 rounded-full font-bold">
                 Moves: {moves}
@@ -216,7 +262,6 @@ const MemoryMatch = () => {
               </span>
             </div>
 
-            {/* Card Grid */}
             <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
               {cards.map((card) => (
                 <button
@@ -227,11 +272,14 @@ const MemoryMatch = () => {
                     card.isMatched
                       ? "bg-success/20 border-2 border-success text-success scale-95"
                       : card.isFlipped
-                      ? "bg-primary text-primary-foreground rotate-0"
-                      : "bg-card border-2 border-border hover:border-primary hover:scale-105 cursor-pointer"
+                        ? "bg-primary text-primary-foreground rotate-0"
+                        : "bg-card border-2 border-border hover:border-primary hover:scale-105 cursor-pointer"
                   }`}
                   style={{
-                    transform: card.isFlipped || card.isMatched ? "rotateY(0deg)" : "rotateY(0deg)",
+                    transform:
+                      card.isFlipped || card.isMatched
+                        ? "rotateY(0deg)"
+                        : "rotateY(0deg)",
                   }}
                 >
                   {card.isFlipped || card.isMatched ? card.content : "?"}
@@ -239,7 +287,6 @@ const MemoryMatch = () => {
               ))}
             </div>
 
-            {/* Reset Button */}
             <div className="text-center mt-6">
               <Button variant="ghost" onClick={() => setGameState("idle")}>
                 <RotateCcw className="w-4 h-4" />
@@ -267,14 +314,15 @@ const MemoryMatch = () => {
               </div>
 
               <p className="text-xl mb-2">
-                Completed in <span className="font-bold text-primary">{moves}</span> moves
+                Completed in{" "}
+                <span className="font-bold text-primary">{moves}</span> moves
               </p>
               <p className="text-muted-foreground mb-6">
                 {getStarRating() === 3
                   ? "Perfect memory! Amazing!"
                   : getStarRating() === 2
-                  ? "Great job! Very impressive!"
-                  : "Good work! Try to use fewer moves!"}
+                    ? "Great job! Very impressive!"
+                    : "Good work! Try to use fewer moves!"}
               </p>
 
               <div className="flex flex-wrap justify-center gap-3">
@@ -282,7 +330,11 @@ const MemoryMatch = () => {
                   <RotateCcw className="w-5 h-5" />
                   Play Again
                 </Button>
-                <Button variant="outline" size="lg" onClick={() => setGameState("idle")}>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setGameState("idle")}
+                >
                   Change Tables
                 </Button>
               </div>
@@ -290,6 +342,16 @@ const MemoryMatch = () => {
           </div>
         )}
       </div>
+
+      {showSavePrompt && (
+        <SaveProgressPrompt
+          session={getGameSession()}
+          onClose={() => {
+            setShowSavePrompt(false);
+            setHasRecorded(true);
+          }}
+        />
+      )}
     </Layout>
   );
 };
