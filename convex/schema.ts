@@ -5,7 +5,7 @@ export default defineSchema({
   // Users table - name + PIN for kid-friendly authentication
   users: defineTable({
     name: v.string(),
-    pin: v.string(), // 4-digit PIN for account recovery
+    pin: v.optional(v.string()), // 4-digit PIN for account recovery (optional for legacy users)
     avatar: v.optional(v.string()), // emoji or color for avatar
     createdAt: v.number(),
     lastActiveAt: v.number(),

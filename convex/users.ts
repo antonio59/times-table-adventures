@@ -69,8 +69,22 @@ export const loginUser = mutation({
       throw new Error("User not found");
     }
 
-    if (user.pin !== args.pin) {
-      throw new Error("Incorrect PIN");
+    // If user has a PIN set, verify it
+    if (user.pin) {
+      if (user.pin !== args.pin) {
+        throw new Error("Incorrect PIN");
+      }
+    } else {
+      // Legacy user without PIN - set the PIN now
+      await ctx.db.patch(user._id, {
+        pin: args.pin,
+        lastActiveAt: Date.now(),
+      });
+      return {
+        userId: user._id,
+        name: user.name,
+        avatar: user.avatar,
+      };
     }
 
     // Update last active time
