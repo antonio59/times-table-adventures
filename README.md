@@ -34,13 +34,14 @@ A fun, interactive times table learning app for kids! Built with React, TypeScri
 - **Frontend**: React 18, TypeScript, Vite
 - **Styling**: Tailwind CSS, shadcn/ui components
 - **Backend**: Convex (real-time database)
-- **Package Manager**: npm
+- **Package Manager**: Bun
+- **Hosting**: Netlify
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Node.js 18+](https://nodejs.org/)
+- [Bun](https://bun.sh/) (or Node.js 18+)
 - [Convex account](https://convex.dev/) (free)
 
 ### Installation
@@ -55,7 +56,7 @@ A fun, interactive times table learning app for kids! Built with React, TypeScri
 2. **Install dependencies**
 
    ```bash
-   npm install
+   bun install
    ```
 
 3. **Set up Convex**
@@ -63,7 +64,7 @@ A fun, interactive times table learning app for kids! Built with React, TypeScri
    If you're setting up a new Convex project:
 
    ```bash
-   npx convex dev
+   bunx convex dev
    ```
 
    This will prompt you to log in and create a new project.
@@ -78,10 +79,10 @@ A fun, interactive times table learning app for kids! Built with React, TypeScri
 
    ```bash
    # Terminal 1 - Frontend
-   npm run dev
+   bun run dev
 
    # Terminal 2 - Convex backend (for local development)
-   npm run dev:backend
+   bun run dev:backend
    ```
 
 5. **Open the app**
@@ -92,12 +93,12 @@ A fun, interactive times table learning app for kids! Built with React, TypeScri
 
 | Command                 | Description              |
 | ----------------------- | ------------------------ |
-| `npm run dev`           | Run Vite dev server      |
-| `npm run dev:backend`   | Run Convex dev server    |
-| `npm run build`         | Build for production     |
-| `npm run preview`       | Preview production build |
-| `npm run lint`          | Run ESLint               |
-| `npm run convex:deploy` | Deploy Convex functions  |
+| `bun run dev`           | Run Vite dev server      |
+| `bun run dev:backend`   | Run Convex dev server    |
+| `bun run build`         | Build for production     |
+| `bun run preview`       | Preview production build |
+| `bun run lint`          | Run ESLint               |
+| `bun run convex:deploy` | Deploy Convex functions  |
 
 ## Project Structure
 
@@ -129,6 +130,7 @@ times-table-adventures/
 │   └── main.tsx
 ├── .github/
 │   └── workflows/         # CI/CD pipelines
+├── netlify.toml           # Netlify configuration
 └── package.json
 ```
 
@@ -170,29 +172,44 @@ Per-table proficiency tracking:
 
 ## Deployment
 
-### Convex Backend
+### Netlify (Recommended)
 
-```bash
-npx convex deploy
-```
+The project is configured for Netlify deployment:
 
-### Frontend (Vercel, Netlify, etc.)
+1. **Connect your GitHub repo to Netlify**
+2. **Set environment variables in Netlify**:
+   - `VITE_CONVEX_URL` - Your Convex deployment URL
+3. **Build settings are auto-detected** from `netlify.toml`:
+   - Build command: `bun run build`
+   - Publish directory: `dist`
 
-1. Set environment variable: `VITE_CONVEX_URL`
-2. Build command: `npm run build`
-3. Output directory: `dist`
+### GitHub Actions CI/CD
 
-### GitHub Actions
-
-The project includes CI/CD workflows:
+The project includes automated CI/CD workflows:
 
 - **CI** (`ci.yml`) - Runs on PRs: linting, type checking, and build
-- **Deploy** (`deploy.yml`) - Runs on push to main: deploys Convex and builds frontend
+- **Deploy** (`deploy.yml`) - Runs on push to main: deploys Convex backend and frontend to Netlify
 
-Required secrets for GitHub Actions:
+#### Required GitHub Secrets
 
-- `VITE_CONVEX_URL` - Your Convex deployment URL
-- `CONVEX_DEPLOY_KEY` - Convex deploy key for CI/CD
+| Secret               | Description                                                                                                         |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `VITE_CONVEX_URL`    | Your Convex deployment URL (e.g., `https://silent-wolf-650.convex.cloud`)                                           |
+| `CONVEX_DEPLOY_KEY`  | Convex deploy key for CI/CD                                                                                         |
+| `NETLIFY_AUTH_TOKEN` | Netlify personal access token ([create one here](https://app.netlify.com/user/applications#personal-access-tokens)) |
+| `NETLIFY_SITE_ID`    | Your Netlify site ID (found in Site Settings > General)                                                             |
+
+### Manual Deployment
+
+```bash
+# Deploy Convex backend
+bunx convex deploy
+
+# Build frontend
+bun run build
+
+# The dist/ folder can be deployed to any static host
+```
 
 ## Contributing
 
