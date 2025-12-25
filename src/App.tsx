@@ -9,6 +9,10 @@ import Practice from "./pages/Practice";
 import Quiz from "./pages/Quiz";
 import Print from "./pages/Print";
 import WordProblems from "./pages/WordProblems";
+import SpeedRace from "./pages/SpeedRace";
+import MissingNumber from "./pages/MissingNumber";
+import MemoryMatch from "./pages/MemoryMatch";
+import Tips from "./pages/Tips";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +29,10 @@ const App = () => (
           <Route path="/practice" element={<Practice />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/stories" element={<WordProblems />} />
+          <Route path="/speed" element={<SpeedRace />} />
+          <Route path="/missing" element={<MissingNumber />} />
+          <Route path="/memory" element={<MemoryMatch />} />
+          <Route path="/tips" element={<Tips />} />
           <Route path="/print" element={<Print />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
