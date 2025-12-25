@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
-import { Play, Trophy, Star, Clock, RotateCcw } from "lucide-react";
+import { Play, Trophy, Star, Clock, RotateCcw, Check } from "lucide-react";
 
 interface Question {
   a: number;
@@ -10,8 +10,8 @@ interface Question {
   options: number[];
 }
 
-const generateQuestion = (): Question => {
-  const a = Math.floor(Math.random() * 12) + 1;
+const generateQuestion = (selectedTables: number[]): Question => {
+  const a = selectedTables[Math.floor(Math.random() * selectedTables.length)];
   const b = Math.floor(Math.random() * 12) + 1;
   const answer = a * b;
 
@@ -41,24 +41,39 @@ const Quiz = () => {
   const [timeLeft, setTimeLeft] = useState(60);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showCorrect, setShowCorrect] = useState(false);
-  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("medium");
+  const [selectedTables, setSelectedTables] = useState<number[]>([2]);
+  const [timePerQuestion, setTimePerQuestion] = useState<number>(10);
 
-  const timeSettings = {
-    easy: 90,
-    medium: 60,
-    hard: 30,
+  const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+  const toggleTable = (table: number) => {
+    setSelectedTables((prev) => {
+      if (prev.includes(table)) {
+        if (prev.length === 1) return prev; // Keep at least one selected
+        return prev.filter((t) => t !== table);
+      }
+      return [...prev, table].sort((a, b) => a - b);
+    });
+  };
+
+  const selectUpTo = (table: number) => {
+    const tables = allTables.filter((t) => t <= table);
+    setSelectedTables(tables);
   };
 
   const startGame = useCallback(() => {
-    const newQuestions = Array.from({ length: 20 }, () => generateQuestion());
+    const questionCount = 10;
+    const newQuestions = Array.from({ length: questionCount }, () =>
+      generateQuestion(selectedTables)
+    );
     setQuestions(newQuestions);
     setCurrentIndex(0);
     setScore(0);
-    setTimeLeft(timeSettings[difficulty]);
+    setTimeLeft(questionCount * timePerQuestion);
     setSelectedAnswer(null);
     setShowCorrect(false);
     setGameState("playing");
-  }, [difficulty]);
+  }, [selectedTables, timePerQuestion]);
 
   useEffect(() => {
     if (gameState !== "playing") return;
@@ -117,30 +132,77 @@ const Quiz = () => {
                 🎮 Quiz Challenge
               </h1>
               <p className="text-muted-foreground">
-                Test your multiplication skills and earn stars!
+                Select the times tables you've learned, then test yourself!
               </p>
             </div>
 
-            <div className="bg-card rounded-3xl p-8 shadow-card border border-border mb-6">
-              <h2 className="text-xl font-bold mb-4">Choose Difficulty</h2>
-              <div className="flex flex-wrap justify-center gap-3 mb-6">
-                {(["easy", "medium", "hard"] as const).map((level) => (
+            <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
+              <h2 className="text-xl font-bold mb-2">Which tables do you know?</h2>
+              <p className="text-sm text-muted-foreground mb-4">
+                Click individual tables or use the quick select buttons below
+              </p>
+
+              {/* Individual table selection */}
+              <div className="flex flex-wrap justify-center gap-2 mb-4">
+                {allTables.map((table) => (
                   <Button
-                    key={level}
-                    variant={difficulty === level ? "default" : "game"}
-                    onClick={() => setDifficulty(level)}
-                    className="min-w-24"
+                    key={table}
+                    variant={selectedTables.includes(table) ? "default" : "game"}
+                    size="sm"
+                    onClick={() => toggleTable(table)}
+                    className="w-12 h-12 text-lg font-bold relative"
                   >
-                    {level === "easy" && "🌱 Easy"}
-                    {level === "medium" && "🌟 Medium"}
-                    {level === "hard" && "🔥 Hard"}
+                    {table}
+                    {selectedTables.includes(table) && (
+                      <Check className="w-3 h-3 absolute -top-1 -right-1 bg-success text-success-foreground rounded-full p-0.5" />
+                    )}
                   </Button>
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground mb-6">
-                <Clock className="w-4 h-4 inline mr-1" />
-                Time: {timeSettings[difficulty]} seconds | 20 questions
-              </p>
+
+              {/* Quick select buttons */}
+              <div className="flex flex-wrap justify-center gap-2 mb-6">
+                <p className="w-full text-xs text-muted-foreground mb-1">Quick select up to:</p>
+                {[2, 3, 4, 5, 6, 10, 12].map((table) => (
+                  <Button
+                    key={table}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => selectUpTo(table)}
+                    className="text-xs"
+                  >
+                    Up to {table}×
+                  </Button>
+                ))}
+              </div>
+
+              {/* Time selection */}
+              <h2 className="text-lg font-bold mb-2">Time per question</h2>
+              <div className="flex flex-wrap justify-center gap-2 mb-6">
+                {[5, 10, 15, 20].map((seconds) => (
+                  <Button
+                    key={seconds}
+                    variant={timePerQuestion === seconds ? "default" : "game"}
+                    size="sm"
+                    onClick={() => setTimePerQuestion(seconds)}
+                  >
+                    {seconds}s
+                  </Button>
+                ))}
+              </div>
+
+              <div className="bg-muted/50 rounded-2xl p-4 mb-6">
+                <p className="text-sm">
+                  <span className="font-semibold">Your quiz:</span>{" "}
+                  {selectedTables.length === 1
+                    ? `${selectedTables[0]}× table`
+                    : `${selectedTables.length} tables (${selectedTables[0]}× to ${selectedTables[selectedTables.length - 1]}×)`}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  <Clock className="w-4 h-4 inline mr-1" />
+                  10 questions • {10 * timePerQuestion} seconds total
+                </p>
+              </div>
 
               <Button size="xl" onClick={startGame}>
                 <Play className="w-6 h-6" />
@@ -269,7 +331,7 @@ const Quiz = () => {
                   size="lg"
                   onClick={() => setGameState("idle")}
                 >
-                  Change Difficulty
+                  Change Settings
                 </Button>
               </div>
             </div>
