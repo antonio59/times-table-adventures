@@ -8,6 +8,7 @@ import Tables from "./pages/Tables";
 import Practice from "./pages/Practice";
 import Quiz from "./pages/Quiz";
 import Print from "./pages/Print";
+import WordProblems from "./pages/WordProblems";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/tables" element={<Tables />} />
           <Route path="/practice" element={<Practice />} />
           <Route path="/quiz" element={<Quiz />} />
+          <Route path="/stories" element={<WordProblems />} />
           <Route path="/print" element={<Print />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
