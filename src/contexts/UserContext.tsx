@@ -45,7 +45,8 @@ interface UserContextType {
   isLoading: boolean;
   isLoggedIn: boolean;
   pendingSession: PendingSession | null;
-  login: (name: string, avatar?: string) => Promise<void>;
+  login: (name: string, pin: string, avatar?: string) => Promise<void>;
+  signup: (name: string, pin: string, avatar?: string) => Promise<void>;
   loginWithId: (id: Id<"users">, name: string, avatar?: string) => void;
   logout: () => void;
   recordGame: (
@@ -70,7 +71,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     null,
   );
 
-  const getOrCreateUser = useMutation(api.users.getOrCreateUser);
+  const createUserMutation = useMutation(api.users.createUser);
+  const loginUserMutation = useMutation(api.users.loginUser);
   const recordSession = useMutation(api.gameSessions.recordSession);
   const updateMasteryBatch = useMutation(api.tableMastery.updateMasteryBatch);
   const checkAchievements = useMutation(api.achievements.checkAchievements);
@@ -84,30 +86,56 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setUserName(name);
         setUserAvatar(avatar);
         setUserId(id as Id<"users">);
-      } catch (e) {
+      } catch {
         localStorage.removeItem(USER_STORAGE_KEY);
       }
     }
     setIsLoading(false);
   }, []);
 
-  const login = useCallback(
-    async (name: string, avatar?: string) => {
+  // Sign up a new user
+  const signup = useCallback(
+    async (name: string, pin: string, avatar?: string) => {
       setIsLoading(true);
       try {
-        const id = await getOrCreateUser({ name, avatar });
+        const id = await createUserMutation({ name, pin, avatar });
+        const normalizedName = name.toLowerCase().trim();
         setUserId(id);
-        setUserName(name.toLowerCase().trim());
+        setUserName(normalizedName);
         setUserAvatar(avatar ?? null);
         localStorage.setItem(
           USER_STORAGE_KEY,
-          JSON.stringify({ name: name.toLowerCase().trim(), avatar, id }),
+          JSON.stringify({ name: normalizedName, avatar, id }),
         );
       } finally {
         setIsLoading(false);
       }
     },
-    [getOrCreateUser],
+    [createUserMutation],
+  );
+
+  // Login existing user with PIN
+  const login = useCallback(
+    async (name: string, pin: string, avatar?: string) => {
+      setIsLoading(true);
+      try {
+        const result = await loginUserMutation({ name, pin });
+        setUserId(result.userId);
+        setUserName(result.name);
+        setUserAvatar(avatar ?? result.avatar ?? null);
+        localStorage.setItem(
+          USER_STORAGE_KEY,
+          JSON.stringify({
+            name: result.name,
+            avatar: avatar ?? result.avatar,
+            id: result.userId,
+          }),
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [loginUserMutation],
   );
 
   const logout = useCallback(() => {
@@ -200,6 +228,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         isLoggedIn: !!userId,
         pendingSession,
         login,
+        signup,
         loginWithId,
         logout,
         recordGame,

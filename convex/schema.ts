@@ -2,9 +2,10 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  // Users table - simple name-based identification (no auth needed for kids)
+  // Users table - name + PIN for kid-friendly authentication
   users: defineTable({
     name: v.string(),
+    pin: v.string(), // 4-digit PIN for account recovery
     avatar: v.optional(v.string()), // emoji or color for avatar
     createdAt: v.number(),
     lastActiveAt: v.number(),

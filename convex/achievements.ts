@@ -171,7 +171,10 @@ export const checkAchievements = mutation({
     const newAchievements: string[] = [];
 
     // Helper to award if not already earned
-    const tryAward = async (type: string, metadata?: any) => {
+    const tryAward = async (
+      type: string,
+      metadata?: Record<string, unknown>,
+    ) => {
       const existing = await ctx.db
         .query("achievements")
         .withIndex("by_user_and_type", (q) =>
