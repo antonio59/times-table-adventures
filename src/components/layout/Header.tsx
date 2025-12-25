@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calculator, Gamepad2, FileText, Home, Star, BookOpen } from "lucide-react";
+import { Calculator, Gamepad2, FileText, Home, Lightbulb } from "lucide-react";
 
 const Header = () => {
   const location = useLocation();
@@ -8,9 +8,8 @@ const Header = () => {
   const navItems = [
     { path: "/", label: "Home", icon: Home },
     { path: "/tables", label: "Tables", icon: Calculator },
-    { path: "/practice", label: "Practice", icon: Star },
-    { path: "/quiz", label: "Quiz", icon: Gamepad2 },
-    { path: "/stories", label: "Stories", icon: BookOpen },
+    { path: "/quiz", label: "Games", icon: Gamepad2 },
+    { path: "/tips", label: "Tips", icon: Lightbulb },
     { path: "/print", label: "Print", icon: FileText },
   ];
 
