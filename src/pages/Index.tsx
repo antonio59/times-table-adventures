@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calculator, Gamepad2, FileText, Star, Sparkles } from "lucide-react";
+import { Calculator, Gamepad2, FileText, Star, Sparkles, BookOpen } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 
 const FeatureCard = ({
@@ -93,7 +93,7 @@ const Index = () => {
             Choose Your Adventure 🚀
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <FeatureCard
               icon={Calculator}
               title="Times Tables"
@@ -119,12 +119,20 @@ const Index = () => {
               delay="0.2s"
             />
             <FeatureCard
+              icon={BookOpen}
+              title="Word Problems"
+              description="Fun story problems to practice multiplication in real life!"
+              to="/stories"
+              variant="default"
+              delay="0.3s"
+            />
+            <FeatureCard
               icon={FileText}
               title="Print Worksheets"
               description="Download and print practice sheets to learn offline!"
               to="/print"
               variant="success"
-              delay="0.3s"
+              delay="0.4s"
             />
           </div>
         </section>
