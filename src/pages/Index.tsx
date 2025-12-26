@@ -12,7 +12,8 @@ import {
   Layers,
   Lightbulb,
   Trophy,
-  User,
+  Divide,
+  Mountain,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
@@ -128,7 +129,7 @@ const Index = () => {
               Master Your
             </span>
             <br />
-            <span className="text-foreground">Times Tables! 🎉</span>
+            <span className="text-foreground">Times Tables!</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
@@ -155,7 +156,7 @@ const Index = () => {
         {/* Games Section */}
         <section className="py-8">
           <h2 className="text-2xl font-bold text-center mb-2">
-            🎮 Games & Practice
+            Games & Practice
           </h2>
           <p className="text-muted-foreground text-center mb-8">
             Choose how you want to learn today!
@@ -205,10 +206,34 @@ const Index = () => {
             <FeatureCard
               icon={BookOpen}
               title="Word Problems"
-              description="Story-based multiplication"
+              description="70+ story scenarios"
               to="/stories"
               variant="secondary"
               delay="0.25s"
+            />
+            <FeatureCard
+              icon={Divide}
+              title="Division"
+              description="Reverse multiplication practice"
+              to="/division"
+              variant="default"
+              delay="0.3s"
+            />
+            <FeatureCard
+              icon={Sparkles}
+              title="Pattern Puzzle"
+              description="Find the missing number"
+              to="/pattern"
+              variant="fun"
+              delay="0.35s"
+            />
+            <FeatureCard
+              icon={Mountain}
+              title="Table Climb"
+              description="Climb to the summit!"
+              to="/climb"
+              variant="success"
+              delay="0.4s"
             />
           </div>
         </section>
@@ -216,7 +241,7 @@ const Index = () => {
         {/* Tools Section */}
         <section className="py-8">
           <h2 className="text-2xl font-bold text-center mb-2">
-            📚 Learning Tools
+            Learning Tools
           </h2>
           <p className="text-muted-foreground text-center mb-8">
             Reference materials and resources
@@ -270,9 +295,9 @@ const Index = () => {
               </div>
               <div>
                 <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">
-                  ∞
+                  9
                 </div>
-                <p className="text-sm text-muted-foreground">Fun to Be Had!</p>
+                <p className="text-sm text-muted-foreground">Fun Games!</p>
               </div>
             </div>
           </div>

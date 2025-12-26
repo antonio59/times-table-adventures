@@ -11,7 +11,10 @@ A fun, interactive times table learning app for kids! Built with React, TypeScri
 - **Practice Mode** - Flashcard-style practice with instant feedback
 - **Memory Match** - Match equations with their answers
 - **Missing Number** - Find the missing number in equations (e.g., `? × 4 = 20`)
-- **Word Problems** - Story-based multiplication problems
+- **Word Problems** - 70+ story-based multiplication problems
+- **Division Challenge** - Reverse multiplication practice
+- **Pattern Puzzle** - Find missing numbers in sequences
+- **Times Table Climb** - Mountain climbing adventure with lives
 
 ### Progress Tracking (Optional)
 
@@ -26,13 +29,15 @@ A fun, interactive times table learning app for kids! Built with React, TypeScri
 
 - Colorful, playful UI with animations
 - Encouraging feedback messages
-- No pressure to create accounts
+- Confetti celebrations on streaks and perfect scores
+- "Why was I wrong?" help button with learning tips
 - Works great on tablets and phones
 
 ## Tech Stack
 
 - **Frontend**: React 18, TypeScript, Vite
 - **Styling**: Tailwind CSS, shadcn/ui components
+- **Animations**: Framer Motion, canvas-confetti
 - **Backend**: Convex (real-time database)
 - **Package Manager**: Bun
 - **Hosting**: Netlify
@@ -114,16 +119,24 @@ times-table-adventures/
 │   ├── components/
 │   │   ├── ui/            # shadcn/ui components
 │   │   ├── layout/        # Header, Layout
+│   │   ├── AnimatedElements.tsx  # Framer Motion animations
+│   │   ├── ErrorBoundary.tsx     # Error handling
+│   │   ├── WrongAnswerHelp.tsx   # Learning tips
 │   │   ├── UserMenu.tsx   # User dropdown/login
 │   │   └── SaveProgressPrompt.tsx
 │   ├── contexts/
 │   │   └── UserContext.tsx # User state management
+│   ├── lib/
+│   │   └── confetti.ts    # Confetti effects
 │   ├── pages/
 │   │   ├── Quiz.tsx
 │   │   ├── Practice.tsx
 │   │   ├── SpeedRace.tsx
 │   │   ├── MemoryMatch.tsx
 │   │   ├── MissingNumber.tsx
+│   │   ├── DivisionChallenge.tsx
+│   │   ├── PatternPuzzle.tsx
+│   │   ├── TimesTableClimb.tsx
 │   │   ├── Progress.tsx   # Stats dashboard
 │   │   └── ...
 │   ├── App.tsx
@@ -182,6 +195,16 @@ The project is configured for Netlify deployment:
 3. **Build settings are auto-detected** from `netlify.toml`:
    - Build command: `bun run build`
    - Publish directory: `dist`
+
+### Custom Domain with Subdomain
+
+To use a subdomain without changing your nameservers:
+
+1. Add a CNAME record in your DNS provider:
+   - **Name:** your subdomain (e.g., `math`)
+   - **Value:** `your-site.netlify.app`
+2. Add the custom domain in Netlify's domain settings
+3. SSL certificate will be provisioned automatically
 
 ### GitHub Actions CI/CD
 

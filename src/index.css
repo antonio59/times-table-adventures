@@ -1,7 +1,7 @@
-@import '@fontsource/nunito/400.css';
-@import '@fontsource/nunito/600.css';
-@import '@fontsource/nunito/700.css';
-@import '@fontsource/nunito/800.css';
+@import "@fontsource/nunito/400.css";
+@import "@fontsource/nunito/600.css";
+@import "@fontsource/nunito/700.css";
+@import "@fontsource/nunito/800.css";
 
 @tailwind base;
 @tailwind components;
@@ -46,11 +46,31 @@
     --radius: 1rem;
 
     /* Custom gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(174 62% 47%) 0%, hsl(174 70% 38%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(32 95% 60%) 0%, hsl(25 95% 55%) 100%);
-    --gradient-fun: linear-gradient(135deg, hsl(280 70% 65%) 0%, hsl(320 70% 60%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(142 70% 45%) 0%, hsl(160 70% 40%) 100%);
-    --gradient-background: linear-gradient(180deg, hsl(45 33% 97%) 0%, hsl(45 40% 94%) 100%);
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(174 62% 47%) 0%,
+      hsl(174 70% 38%) 100%
+    );
+    --gradient-secondary: linear-gradient(
+      135deg,
+      hsl(32 95% 60%) 0%,
+      hsl(25 95% 55%) 100%
+    );
+    --gradient-fun: linear-gradient(
+      135deg,
+      hsl(280 70% 65%) 0%,
+      hsl(320 70% 60%) 100%
+    );
+    --gradient-success: linear-gradient(
+      135deg,
+      hsl(142 70% 45%) 0%,
+      hsl(160 70% 40%) 100%
+    );
+    --gradient-background: linear-gradient(
+      180deg,
+      hsl(45 33% 97%) 0%,
+      hsl(45 40% 94%) 100%
+    );
 
     /* Shadows */
     --shadow-soft: 0 4px 20px -4px hsl(220 30% 20% / 0.1);
@@ -75,7 +95,7 @@
   }
 
   html {
-    font-family: 'Nunito', sans-serif;
+    font-family: "Nunito", sans-serif;
   }
 
   body {
@@ -89,15 +109,15 @@
   .gradient-primary {
     background: var(--gradient-primary);
   }
-  
+
   .gradient-secondary {
     background: var(--gradient-secondary);
   }
-  
+
   .gradient-fun {
     background: var(--gradient-fun);
   }
-  
+
   .gradient-success {
     background: var(--gradient-success);
   }
@@ -136,32 +156,81 @@
 }
 
 @keyframes bounce-gentle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
 }
 
 @keyframes pop {
-  0% { transform: scale(0.8); opacity: 0; }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
 }
 
 @media print {
   .no-print {
     display: none !important;
   }
-  
+
   body {
     background: white !important;
   }

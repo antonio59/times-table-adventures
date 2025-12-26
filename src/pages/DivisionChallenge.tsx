@@ -1,74 +1,52 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
-import { WrongAnswerHelp } from "@/components/WrongAnswerHelp";
-import {
-  StreakFire,
-  AnimatedStars,
-  AnimatedProgress,
-} from "@/components/AnimatedElements";
-import {
-  celebrateCorrect,
-  celebrateStreak,
-  celebrateWin,
-  celebratePerfect,
-} from "@/lib/confetti";
 import { toast } from "sonner";
 import {
   Play,
   Trophy,
   Star,
-  Clock,
+  Timer,
   RotateCcw,
   Check,
-  Timer,
-  HelpCircle,
+  Divide,
 } from "lucide-react";
 
 interface Question {
-  a: number;
-  b: number;
+  dividend: number;
+  divisor: number;
   answer: number;
   options: number[];
 }
 
 const generateQuestion = (selectedTables: number[]): Question => {
-  const a = selectedTables[Math.floor(Math.random() * selectedTables.length)];
-  const b = Math.floor(Math.random() * 12) + 1;
-  const answer = a * b;
+  const divisor =
+    selectedTables[Math.floor(Math.random() * selectedTables.length)];
+  const answer = Math.floor(Math.random() * 12) + 1;
+  const dividend = divisor * answer;
 
-  // Generate wrong options that are more realistic
+  // Generate wrong options
   const wrongOptions = new Set<number>();
-
-  // Add common mistake patterns
   const commonMistakes = [
-    answer + a, // Added one more group
-    answer - a, // One less group
-    answer + b, // Added one more
-    answer - b, // One less
-    answer + 1, // Off by one
-    answer - 1, // Off by one
-    a + b, // Addition instead of multiplication
-    answer + 10, // Decade error
-    answer - 10, // Decade error
-    Math.abs(answer * 2 - answer), // Double/half confusion
+    answer + 1,
+    answer - 1,
+    answer + 2,
+    answer - 2,
+    divisor,
+    Math.floor(dividend / 10),
   ];
 
-  // Shuffle and pick from common mistakes first
-  const shuffledMistakes = commonMistakes.sort(() => Math.random() - 0.5);
-  for (const wrong of shuffledMistakes) {
+  for (const wrong of commonMistakes) {
     if (wrong !== answer && wrong > 0 && !wrongOptions.has(wrong)) {
       wrongOptions.add(wrong);
       if (wrongOptions.size >= 3) break;
     }
   }
 
-  // Fill remaining with random if needed
   while (wrongOptions.size < 3) {
-    const wrong = answer + (Math.floor(Math.random() * 20) - 10);
+    const wrong = answer + (Math.floor(Math.random() * 10) - 5);
     if (wrong !== answer && wrong > 0 && !wrongOptions.has(wrong)) {
       wrongOptions.add(wrong);
     }
@@ -78,22 +56,22 @@ const generateQuestion = (selectedTables: number[]): Question => {
     () => Math.random() - 0.5,
   );
 
-  return { a, b, answer, options };
+  return { dividend, divisor, answer, options };
 };
 
 type GameState = "idle" | "playing" | "finished";
 
-const Quiz = () => {
+const DivisionChallenge = () => {
   const { isLoggedIn, recordGame } = useUser();
   const [gameState, setGameState] = useState<GameState>("idle");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [questionTimeLeft, setQuestionTimeLeft] = useState(10);
+  const [questionTimeLeft, setQuestionTimeLeft] = useState(15);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showCorrect, setShowCorrect] = useState(false);
-  const [selectedTables, setSelectedTables] = useState<number[]>([2]);
-  const [timePerQuestion, setTimePerQuestion] = useState<number>(10);
+  const [selectedTables, setSelectedTables] = useState<number[]>([2, 5, 10]);
+  const [timePerQuestion, setTimePerQuestion] = useState<number>(15);
   const [questionCount, setQuestionCount] = useState<number>(10);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
@@ -102,8 +80,6 @@ const Quiz = () => {
   >([]);
   const [showSavePrompt, setShowSavePrompt] = useState(false);
   const [hasRecorded, setHasRecorded] = useState(false);
-  const [showHelp, setShowHelp] = useState(false);
-  const [lastWrongAnswer, setLastWrongAnswer] = useState<number | null>(null);
   const questionStartTime = useRef<number>(Date.now());
   const gameStartTime = useRef<number>(Date.now());
 
@@ -150,11 +126,14 @@ const Quiz = () => {
     const timer = setInterval(() => {
       setQuestionTimeLeft((prev) => {
         if (prev <= 1) {
-          // Time's up for this question - auto-fail and move on
           const timeMs = Date.now() - questionStartTime.current;
           setTableResults((prevResults) => [
             ...prevResults,
-            { tableNumber: questions[currentIndex].a, correct: false, timeMs },
+            {
+              tableNumber: questions[currentIndex].divisor,
+              correct: false,
+              timeMs,
+            },
           ]);
           setStreak(0);
           setShowCorrect(true);
@@ -189,7 +168,11 @@ const Quiz = () => {
 
     setTableResults((prev) => [
       ...prev,
-      { tableNumber: questions[currentIndex].a, correct: isCorrect, timeMs },
+      {
+        tableNumber: questions[currentIndex].divisor,
+        correct: isCorrect,
+        timeMs,
+      },
     ]);
 
     if (isCorrect) {
@@ -197,18 +180,11 @@ const Quiz = () => {
       setStreak((prev) => {
         const newStreak = prev + 1;
         if (newStreak > bestStreak) setBestStreak(newStreak);
-        // Celebrate streaks
-        if (newStreak >= 5) {
-          celebrateStreak(newStreak);
-        } else if (newStreak >= 3) {
-          celebrateCorrect();
-        }
         return newStreak;
       });
     } else {
       setShowCorrect(true);
       setStreak(0);
-      setLastWrongAnswer(answer);
     }
 
     setTimeout(() => {
@@ -234,7 +210,7 @@ const Quiz = () => {
 
   const getGameSession = useCallback(
     () => ({
-      gameType: "quiz" as const,
+      gameType: "division" as const,
       tablesUsed: selectedTables,
       score,
       totalQuestions: questions.length,
@@ -245,16 +221,8 @@ const Quiz = () => {
     [selectedTables, score, questions.length, bestStreak],
   );
 
-  // Record game when finished (only if logged in)
   useEffect(() => {
     if (gameState !== "finished" || hasRecorded) return;
-
-    // Celebrate completion
-    if (score === questions.length) {
-      celebratePerfect();
-    } else if (score >= questions.length * 0.7) {
-      celebrateWin();
-    }
 
     if (isLoggedIn) {
       const recordResults = async () => {
@@ -274,7 +242,6 @@ const Quiz = () => {
       };
       recordResults();
     } else {
-      // Show save prompt for non-logged-in users after a short delay
       const timer = setTimeout(() => {
         setShowSavePrompt(true);
       }, 1500);
@@ -287,8 +254,6 @@ const Quiz = () => {
     recordGame,
     getGameSession,
     tableResults,
-    score,
-    questions.length,
   ]);
 
   return (
@@ -298,19 +263,22 @@ const Quiz = () => {
           <div className="text-center">
             <div className="mb-8">
               <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-                🎮 Quiz Challenge
+                <Divide className="inline w-8 h-8 mr-2" />
+                Division Challenge
               </h1>
               <p className="text-muted-foreground">
-                Select the times tables you've learned, then test yourself!
+                Use your times tables knowledge backwards! If you know 3 × 4 =
+                12, then 12 ÷ 4 = 3
               </p>
             </div>
 
             <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
               <h2 className="text-xl font-bold mb-2">
-                Which tables do you know?
+                Which division facts do you want to practice?
               </h2>
               <p className="text-sm text-muted-foreground mb-4">
-                Click individual tables or use the quick select buttons below
+                Select the tables you know - we'll test you on dividing by those
+                numbers
               </p>
 
               <div className="flex flex-wrap justify-center gap-2 mb-4">
@@ -323,8 +291,9 @@ const Quiz = () => {
                     size="sm"
                     onClick={() => toggleTable(table)}
                     className="w-12 h-12 text-lg font-bold relative"
+                    aria-label={`${selectedTables.includes(table) ? "Deselect" : "Select"} dividing by ${table}`}
                   >
-                    {table}
+                    ÷{table}
                     {selectedTables.includes(table) && (
                       <Check className="w-3 h-3 absolute -top-1 -right-1 bg-success text-success-foreground rounded-full p-0.5" />
                     )}
@@ -344,14 +313,14 @@ const Quiz = () => {
                     onClick={() => selectUpTo(table)}
                     className="text-xs"
                   >
-                    Up to {table}×
+                    Up to ÷{table}
                   </Button>
                 ))}
               </div>
 
               <h2 className="text-lg font-bold mb-2">Time per question</h2>
               <div className="flex flex-wrap justify-center gap-2 mb-6">
-                {[5, 10, 15, 20, 30].map((seconds) => (
+                {[10, 15, 20, 30].map((seconds) => (
                   <Button
                     key={seconds}
                     variant={timePerQuestion === seconds ? "default" : "game"}
@@ -380,40 +349,41 @@ const Quiz = () => {
 
               <div className="bg-muted/50 rounded-2xl p-4 mb-6">
                 <p className="text-sm">
-                  <span className="font-semibold">Your quiz:</span>{" "}
+                  <span className="font-semibold">Your challenge:</span>{" "}
+                  Division by{" "}
                   {selectedTables.length === 1
-                    ? `${selectedTables[0]}× table`
-                    : `${selectedTables.length} tables (${selectedTables[0]}× to ${selectedTables[selectedTables.length - 1]}×)`}
+                    ? selectedTables[0]
+                    : `${selectedTables.length} numbers`}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  <Clock className="w-4 h-4 inline mr-1" />
                   {questionCount} questions • {timePerQuestion}s each
                 </p>
               </div>
 
               <Button size="xl" onClick={startGame}>
                 <Play className="w-6 h-6" />
-                Start Quiz!
+                Start Challenge!
               </Button>
+            </div>
+
+            <div className="bg-secondary/20 rounded-2xl p-4 text-sm">
+              <p className="font-semibold mb-2">💡 Division Tip:</p>
+              <p className="text-muted-foreground">
+                Think of division as "how many groups?" If you have 24 ÷ 6, ask
+                yourself: "6 times what equals 24?" The answer is 4!
+              </p>
             </div>
           </div>
         )}
 
         {gameState === "playing" && questions[currentIndex] && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
+          <div>
             <div className="mb-6">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-semibold">
                   Question {currentIndex + 1}/{questions.length}
                 </span>
-                <motion.span
-                  key={questionTimeLeft}
-                  initial={questionTimeLeft <= 5 ? { scale: 1.2 } : {}}
-                  animate={{ scale: 1 }}
+                <span
                   className={`text-sm font-bold flex items-center gap-1 ${
                     questionTimeLeft <= 3
                       ? "text-destructive animate-pulse"
@@ -424,42 +394,40 @@ const Quiz = () => {
                 >
                   <Timer className="w-4 h-4" />
                   {questionTimeLeft}s
-                </motion.span>
+                </span>
               </div>
-              <AnimatedProgress
-                progress={((currentIndex + 1) / questions.length) * 100}
-              />
+              <div className="h-3 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="h-full gradient-secondary transition-all duration-300"
+                  style={{
+                    width: `${((currentIndex + 1) / questions.length) * 100}%`,
+                  }}
+                />
+              </div>
             </div>
 
-            <div className="text-center mb-4 flex items-center justify-center gap-3">
-              <motion.span
-                key={score}
-                initial={{ scale: 1.3 }}
-                animate={{ scale: 1 }}
-                className="inline-flex items-center gap-2 bg-success/20 text-success px-4 py-2 rounded-full font-bold"
-              >
+            <div className="text-center mb-4">
+              <span className="inline-flex items-center gap-2 bg-success/20 text-success px-4 py-2 rounded-full font-bold">
                 <Star className="w-4 h-4" />
                 Score: {score}
-              </motion.span>
-              <StreakFire streak={streak} />
+              </span>
+              {streak >= 3 && (
+                <span className="ml-2 inline-flex items-center gap-1 bg-secondary/20 text-secondary px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+                  🔥 {streak} streak!
+                </span>
+              )}
             </div>
 
-            <motion.div
-              key={currentIndex}
-              initial={{ x: 50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="bg-card rounded-3xl p-8 shadow-card border border-border mb-6"
-            >
+            <div className="bg-card rounded-3xl p-8 shadow-card border border-border mb-6">
               <div className="text-center mb-8">
-                <motion.div
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 200 }}
-                  className="text-5xl md:text-6xl font-extrabold"
-                >
-                  {questions[currentIndex].a} × {questions[currentIndex].b}
-                </motion.div>
+                <div className="text-5xl md:text-6xl font-extrabold">
+                  {questions[currentIndex].dividend} ÷{" "}
+                  {questions[currentIndex].divisor}
+                </div>
+                <p className="text-muted-foreground mt-2">
+                  What times {questions[currentIndex].divisor} equals{" "}
+                  {questions[currentIndex].dividend}?
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -471,135 +439,74 @@ const Quiz = () => {
                   const showAsWrong = isSelected && !isCorrectAnswer;
 
                   return (
-                    <motion.div
+                    <Button
                       key={idx}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.05 }}
-                      whileHover={
-                        selectedAnswer === null ? { scale: 1.02 } : {}
-                      }
-                      whileTap={selectedAnswer === null ? { scale: 0.98 } : {}}
+                      variant="game"
+                      size="lg"
+                      className={`text-2xl font-bold transition-all ${
+                        showAsCorrect
+                          ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
+                          : showAsWrong
+                            ? "!border-destructive !bg-destructive/10"
+                            : isSelected && isCorrectAnswer
+                              ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
+                              : ""
+                      }`}
+                      onClick={() => handleAnswer(option)}
+                      disabled={selectedAnswer !== null}
+                      aria-label={`Answer option: ${option}`}
                     >
-                      <Button
-                        variant="game"
-                        size="lg"
-                        className={`w-full text-2xl font-bold transition-all ${
-                          showAsCorrect
-                            ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
-                            : showAsWrong
-                              ? "!border-destructive !bg-destructive/10 animate-shake"
-                              : isSelected && isCorrectAnswer
-                                ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
-                                : ""
-                        }`}
-                        onClick={() => handleAnswer(option)}
-                        disabled={selectedAnswer !== null}
-                      >
-                        {showAsCorrect && <span className="mr-2">✓</span>}
-                        {showAsWrong && <span className="mr-2">✗</span>}
-                        {option}
-                      </Button>
-                    </motion.div>
+                      {option}
+                    </Button>
                   );
                 })}
               </div>
-
-              {/* Help button when wrong */}
-              <AnimatePresence>
-                {showCorrect && lastWrongAnswer !== null && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="mt-4 text-center"
-                  >
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowHelp(true)}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <HelpCircle className="w-4 h-4 mr-1" />
-                      Why was I wrong? Learn a tip!
-                    </Button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
 
         {gameState === "finished" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", stiffness: 200 }}
-            className="text-center"
-          >
+          <div className="text-center">
             <div className="bg-card rounded-3xl p-8 shadow-card border border-border">
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-              >
-                <Trophy className="w-16 h-16 mx-auto mb-4 text-secondary" />
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-3xl font-extrabold mb-2"
-              >
-                Quiz Complete!
-              </motion.h1>
+              <Trophy className="w-16 h-16 mx-auto mb-4 text-secondary animate-bounce-gentle" />
+              <h1 className="text-3xl font-extrabold mb-2">
+                Challenge Complete!
+              </h1>
 
               <div className="flex justify-center gap-1 mb-4">
-                <AnimatedStars rating={getStarRating()} />
+                {[1, 2, 3].map((star) => (
+                  <Star
+                    key={star}
+                    className={`w-10 h-10 ${
+                      star <= getStarRating()
+                        ? "text-secondary fill-secondary"
+                        : "text-muted"
+                    }`}
+                  />
+                ))}
               </div>
 
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, delay: 0.5 }}
-                className="text-5xl font-extrabold mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
-              >
+              <div className="text-5xl font-extrabold mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 {score}/{questions.length}
-              </motion.div>
+              </div>
 
               {bestStreak >= 3 && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                  className="text-sm text-muted-foreground mb-2"
-                >
+                <p className="text-sm text-muted-foreground mb-2">
                   🔥 Best streak: {bestStreak} in a row!
-                </motion.p>
+                </p>
               )}
 
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.7 }}
-                className="text-muted-foreground mb-6"
-              >
+              <p className="text-muted-foreground mb-6">
                 {getStarRating() === 3
-                  ? "Amazing! You're a multiplication master! 🎉"
+                  ? "Incredible! You're a division master! 🎉"
                   : getStarRating() === 2
-                    ? "Great job! Keep practicing! 💪"
+                    ? "Great work! Division is getting easier! 💪"
                     : getStarRating() === 1
-                      ? "Good effort! You're getting there! 🌟"
-                      : "Keep practicing, you'll improve! 📚"}
-              </motion.p>
+                      ? "Good effort! Keep practicing! 🌟"
+                      : "Division takes practice. You'll get there! 📚"}
+              </p>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-                className="flex flex-wrap justify-center gap-3"
-              >
+              <div className="flex flex-wrap justify-center gap-3">
                 <Button onClick={startGame} size="lg">
                   <RotateCcw className="w-5 h-5" />
                   Play Again
@@ -611,9 +518,9 @@ const Quiz = () => {
                 >
                   Change Settings
                 </Button>
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
 
@@ -627,19 +534,8 @@ const Quiz = () => {
           }}
         />
       )}
-
-      {questions[currentIndex] && (
-        <WrongAnswerHelp
-          a={questions[currentIndex].a}
-          b={questions[currentIndex].b}
-          correctAnswer={questions[currentIndex].answer}
-          userAnswer={lastWrongAnswer || 0}
-          isOpen={showHelp}
-          onClose={() => setShowHelp(false)}
-        />
-      )}
     </Layout>
   );
 };
 
-export default Quiz;
+export default DivisionChallenge;
