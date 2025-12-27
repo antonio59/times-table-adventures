@@ -1,14 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/UserMenu";
-import {
-  Calculator,
-  Gamepad2,
-  FileText,
-  Home,
-  Lightbulb,
-  Trophy,
-} from "lucide-react";
+import { SoundToggle } from "@/components/SoundToggle";
+import { Calculator, Gamepad2, Home, Lightbulb, Trophy } from "lucide-react";
 
 const Header = () => {
   const location = useLocation();
@@ -53,6 +47,7 @@ const Header = () => {
                 </Link>
               );
             })}
+            <SoundToggle />
             <UserMenu />
           </nav>
         </div>

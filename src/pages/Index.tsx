@@ -14,6 +14,7 @@ import {
   Trophy,
   Divide,
   Mountain,
+  Calendar,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
@@ -151,6 +152,36 @@ const Index = () => {
               </Button>
             </Link>
           </div>
+        </section>
+
+        {/* Daily Challenge Feature */}
+        <section className="py-8">
+          <Link to="/daily" className="block group">
+            <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 rounded-3xl p-6 md:p-8 border-2 border-primary/30 hover:border-primary transition-all duration-300 hover:shadow-glow-primary">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center shadow-soft group-hover:scale-110 transition-transform duration-300">
+                  <Calendar className="w-10 h-10 text-primary-foreground" />
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <div className="inline-flex items-center gap-2 bg-secondary/20 text-secondary-foreground px-3 py-1 rounded-full text-xs font-semibold mb-2">
+                    <Sparkles className="w-3 h-3" />
+                    <span>New!</span>
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-extrabold mb-2">
+                    Daily Challenge
+                  </h2>
+                  <p className="text-muted-foreground">
+                    A unique challenge every day! Build your streak and compete
+                    for the best score.
+                  </p>
+                </div>
+                <Button size="lg" className="shrink-0">
+                  <Zap className="w-5 h-5" />
+                  Play Now
+                </Button>
+              </div>
+            </div>
+          </Link>
         </section>
 
         {/* Games Section */}
@@ -295,7 +326,7 @@ const Index = () => {
               </div>
               <div>
                 <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">
-                  9
+                  10
                 </div>
                 <p className="text-sm text-muted-foreground">Fun Games!</p>
               </div>

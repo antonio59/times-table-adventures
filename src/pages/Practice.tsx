@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
+import { useSound } from "@/contexts/SoundContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { toast } from "sonner";
 import { Check, X, RotateCcw, Sparkles, Save } from "lucide-react";
@@ -20,6 +21,7 @@ const generateQuestion = (tables: number[]): Question => {
 
 const Practice = () => {
   const { isLoggedIn, recordGame } = useUser();
+  const { play: playSound } = useSound();
   const allTables = Array.from({ length: 12 }, (_, i) => i + 1);
   const [selectedTables, setSelectedTables] = useState<number[]>(allTables);
   const [question, setQuestion] = useState<Question | null>(null);
@@ -71,10 +73,17 @@ const Practice = () => {
       setStreak((prev) => {
         const newStreak = prev + 1;
         if (newStreak > bestStreak) setBestStreak(newStreak);
+        // Play streak sound for streaks of 3+
+        if (newStreak >= 3 && newStreak % 3 === 0) {
+          playSound("streak");
+        } else {
+          playSound("correct");
+        }
         return newStreak;
       });
       setTotalCorrect((prev) => prev + 1);
     } else {
+      playSound("wrong");
       setStreak(0);
     }
 

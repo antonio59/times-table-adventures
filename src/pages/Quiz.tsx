@@ -3,8 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
+import { useSound } from "@/contexts/SoundContext";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { WrongAnswerHelp } from "@/components/WrongAnswerHelp";
+import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
 import {
   StreakFire,
   AnimatedStars,
@@ -26,6 +29,7 @@ import {
   Check,
   Timer,
   HelpCircle,
+  Keyboard,
 } from "lucide-react";
 
 interface Question {
@@ -85,6 +89,7 @@ type GameState = "idle" | "playing" | "finished";
 
 const Quiz = () => {
   const { isLoggedIn, recordGame } = useUser();
+  const { play: playSound } = useSound();
   const [gameState, setGameState] = useState<GameState>("idle");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -103,9 +108,101 @@ const Quiz = () => {
   const [showSavePrompt, setShowSavePrompt] = useState(false);
   const [hasRecorded, setHasRecorded] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const [lastWrongAnswer, setLastWrongAnswer] = useState<number | null>(null);
   const questionStartTime = useRef<number>(Date.now());
   const gameStartTime = useRef<number>(Date.now());
+
+  // Keyboard shortcuts for quiz answers
+  useKeyboardShortcuts({
+    shortcuts: [
+      {
+        key: "1",
+        description: "Select first answer",
+        action: () => {
+          if (
+            gameState === "playing" &&
+            selectedAnswer === null &&
+            questions[currentIndex]?.options[0]
+          ) {
+            handleAnswer(questions[currentIndex].options[0]);
+          }
+        },
+        disabled: gameState !== "playing" || selectedAnswer !== null,
+      },
+      {
+        key: "2",
+        description: "Select second answer",
+        action: () => {
+          if (
+            gameState === "playing" &&
+            selectedAnswer === null &&
+            questions[currentIndex]?.options[1]
+          ) {
+            handleAnswer(questions[currentIndex].options[1]);
+          }
+        },
+        disabled: gameState !== "playing" || selectedAnswer !== null,
+      },
+      {
+        key: "3",
+        description: "Select third answer",
+        action: () => {
+          if (
+            gameState === "playing" &&
+            selectedAnswer === null &&
+            questions[currentIndex]?.options[2]
+          ) {
+            handleAnswer(questions[currentIndex].options[2]);
+          }
+        },
+        disabled: gameState !== "playing" || selectedAnswer !== null,
+      },
+      {
+        key: "4",
+        description: "Select fourth answer",
+        action: () => {
+          if (
+            gameState === "playing" &&
+            selectedAnswer === null &&
+            questions[currentIndex]?.options[3]
+          ) {
+            handleAnswer(questions[currentIndex].options[3]);
+          }
+        },
+        disabled: gameState !== "playing" || selectedAnswer !== null,
+      },
+      {
+        key: "Space",
+        description: "Start game",
+        action: () => {
+          if (gameState === "idle") {
+            startGame();
+          }
+        },
+        disabled: gameState !== "idle",
+      },
+      {
+        key: "Escape",
+        description: "Go back to settings",
+        action: () => {
+          if (gameState === "finished") {
+            setGameState("idle");
+          } else if (showShortcuts) {
+            setShowShortcuts(false);
+          } else if (showHelp) {
+            setShowHelp(false);
+          }
+        },
+      },
+      {
+        key: "?",
+        description: "Show keyboard shortcuts",
+        action: () => setShowShortcuts(true),
+      },
+    ],
+    enabled: true,
+  });
 
   const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
@@ -125,6 +222,7 @@ const Quiz = () => {
   };
 
   const startGame = useCallback(() => {
+    playSound("gameStart");
     const newQuestions = Array.from({ length: questionCount }, () =>
       generateQuestion(selectedTables),
     );
@@ -142,7 +240,7 @@ const Quiz = () => {
     gameStartTime.current = Date.now();
     questionStartTime.current = Date.now();
     setGameState("playing");
-  }, [selectedTables, timePerQuestion, questionCount]);
+  }, [selectedTables, timePerQuestion, questionCount, playSound]);
 
   useEffect(() => {
     if (gameState !== "playing" || selectedAnswer !== null) return;
@@ -200,12 +298,17 @@ const Quiz = () => {
         // Celebrate streaks
         if (newStreak >= 5) {
           celebrateStreak(newStreak);
+          playSound("streak");
         } else if (newStreak >= 3) {
           celebrateCorrect();
+          playSound("streak");
+        } else {
+          playSound("correct");
         }
         return newStreak;
       });
     } else {
+      playSound("wrong");
       setShowCorrect(true);
       setStreak(0);
       setLastWrongAnswer(answer);
@@ -395,6 +498,18 @@ const Quiz = () => {
                 <Play className="w-6 h-6" />
                 Start Quiz!
               </Button>
+
+              <div className="mt-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowShortcuts(true)}
+                  className="text-muted-foreground"
+                >
+                  <Keyboard className="w-4 h-4 mr-1" />
+                  Keyboard shortcuts (?)
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -484,7 +599,7 @@ const Quiz = () => {
                       <Button
                         variant="game"
                         size="lg"
-                        className={`w-full text-2xl font-bold transition-all ${
+                        className={`w-full text-2xl font-bold transition-all relative ${
                           showAsCorrect
                             ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
                             : showAsWrong
@@ -499,6 +614,10 @@ const Quiz = () => {
                         {showAsCorrect && <span className="mr-2">✓</span>}
                         {showAsWrong && <span className="mr-2">✗</span>}
                         {option}
+                        {/* Keyboard shortcut hint */}
+                        <span className="absolute top-1 left-2 text-xs text-muted-foreground/50 font-mono">
+                          {idx + 1}
+                        </span>
                       </Button>
                     </motion.div>
                   );
@@ -638,6 +757,12 @@ const Quiz = () => {
           onClose={() => setShowHelp(false)}
         />
       )}
+
+      <KeyboardShortcutsHelp
+        isOpen={showShortcuts}
+        onClose={() => setShowShortcuts(false)}
+        context="quiz"
+      />
     </Layout>
   );
 };
