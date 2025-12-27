@@ -21,6 +21,10 @@ export default defineSchema({
       v.literal("memory"),
       v.literal("missing"),
       v.literal("stories"),
+      v.literal("climb"),
+      v.literal("division"),
+      v.literal("pattern"),
+      v.literal("daily"),
     ),
     tablesUsed: v.array(v.number()), // which times tables were practiced
     score: v.number(),

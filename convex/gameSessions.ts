@@ -9,6 +9,10 @@ const gameTypeValidator = v.union(
   v.literal("memory"),
   v.literal("missing"),
   v.literal("stories"),
+  v.literal("climb"),
+  v.literal("division"),
+  v.literal("pattern"),
+  v.literal("daily"),
 );
 
 // Record a completed game session

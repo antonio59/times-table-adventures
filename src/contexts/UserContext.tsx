@@ -15,7 +15,11 @@ type GameType =
   | "speed"
   | "memory"
   | "missing"
-  | "stories";
+  | "stories"
+  | "climb"
+  | "division"
+  | "pattern"
+  | "daily";
 
 export interface GameSession {
   gameType: GameType;
