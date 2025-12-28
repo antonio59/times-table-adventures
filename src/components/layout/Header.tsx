@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/UserMenu";
 import { SoundToggle } from "@/components/SoundToggle";
@@ -6,14 +6,34 @@ import { Calculator, Gamepad2, Home, Lightbulb, Trophy } from "lucide-react";
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { path: "/", label: "Home", icon: Home },
     { path: "/tables", label: "Tables", icon: Calculator },
-    { path: "/quiz", label: "Games", icon: Gamepad2 },
+    { path: "/#games", label: "Games", icon: Gamepad2 },
     { path: "/tips", label: "Tips", icon: Lightbulb },
     { path: "/progress", label: "Progress", icon: Trophy },
   ];
+
+  const handleNavClick = (path: string) => {
+    if (path === "/#games") {
+      if (location.pathname === "/") {
+        // Already on home, just scroll
+        document
+          .getElementById("games")
+          ?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        // Navigate to home, then scroll after a brief delay
+        navigate("/");
+        setTimeout(() => {
+          document
+            .getElementById("games")
+            ?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-card/80 backdrop-blur-md border-b border-border shadow-soft no-print">
@@ -29,7 +49,31 @@ const Header = () => {
           <nav className="flex items-center gap-1 md:gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = location.pathname === item.path;
+              const isActive = item.path.startsWith("/#")
+                ? location.pathname === "/" &&
+                  location.hash === item.path.slice(1)
+                : location.pathname === item.path;
+              const isGamesLink = item.path === "/#games";
+
+              if (isGamesLink) {
+                return (
+                  <Button
+                    key={item.path}
+                    variant={isActive ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => handleNavClick(item.path)}
+                    className={
+                      isActive
+                        ? ""
+                        : "text-muted-foreground hover:text-foreground"
+                    }
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span className="hidden md:inline">{item.label}</span>
+                  </Button>
+                );
+              }
+
               return (
                 <Link key={item.path} to={item.path}>
                   <Button

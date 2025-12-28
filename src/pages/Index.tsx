@@ -185,7 +185,7 @@ const Index = () => {
         </section>
 
         {/* Games Section */}
-        <section className="py-8">
+        <section id="games" className="py-8 scroll-mt-20">
           <h2 className="text-2xl font-bold text-center mb-2">
             Games & Practice
           </h2>
