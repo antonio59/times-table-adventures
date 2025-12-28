@@ -3,6 +3,13 @@
   "private": true,
   "version": "1.3.0",
   "type": "module",
+  "trustedDependencies": [
+    "@rollup/rollup-darwin-arm64",
+    "@rollup/rollup-darwin-x64",
+    "@rollup/rollup-linux-x64-gnu",
+    "esbuild",
+    "@swc/core"
+  ],
   "scripts": {
     "dev": "vite",
     "dev:backend": "convex dev",
@@ -10,7 +17,8 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "convex:deploy": "convex deploy"
+    "convex:deploy": "convex deploy",
+    "postinstall": "node scripts/install-native-deps.js || true"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.2.7",
@@ -74,7 +82,7 @@
     "@types/node": "^22.19.3",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react-swc": "^3.11.0",
+    "@vitejs/plugin-react": "^5.1.2",
     "eslint": "^9.39.2",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.26",
@@ -89,7 +97,7 @@
     "@esbuild/darwin-arm64": "^0.25.0",
     "@esbuild/darwin-x64": "^0.25.0",
     "@esbuild/linux-x64": "^0.25.0",
-    "@rollup/rollup-darwin-arm64": "^4.54.0",
+    "@rollup/rollup-darwin-arm64": "4.54.0",
     "@rollup/rollup-darwin-x64": "^4.54.0",
     "@rollup/rollup-linux-x64-gnu": "^4.54.0",
     "@swc/core-darwin-arm64": "^1.15.7",
