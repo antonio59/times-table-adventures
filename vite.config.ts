@@ -20,26 +20,15 @@ export default defineConfig({
         manualChunks: {
           // Core React libraries
           "vendor-react": ["react", "react-dom", "react-router-dom"],
-          // UI component libraries
+          // UI component libraries (only the ones we use)
           "vendor-radix": [
-            "@radix-ui/react-accordion",
-            "@radix-ui/react-alert-dialog",
-            "@radix-ui/react-avatar",
-            "@radix-ui/react-checkbox",
             "@radix-ui/react-dialog",
             "@radix-ui/react-dropdown-menu",
-            "@radix-ui/react-label",
-            "@radix-ui/react-popover",
             "@radix-ui/react-progress",
-            "@radix-ui/react-select",
-            "@radix-ui/react-separator",
             "@radix-ui/react-slot",
-            "@radix-ui/react-tabs",
             "@radix-ui/react-toast",
             "@radix-ui/react-tooltip",
           ],
-          // Charting library (heavy)
-          "vendor-charts": ["recharts"],
           // Convex client
           "vendor-convex": ["convex"],
           // Utilities
@@ -47,8 +36,6 @@ export default defineConfig({
             "class-variance-authority",
             "clsx",
             "tailwind-merge",
-            "date-fns",
-            "zod",
           ],
         },
       },
