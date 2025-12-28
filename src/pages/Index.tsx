@@ -27,6 +27,7 @@ const FeatureCard = ({
   to,
   variant,
   delay,
+  compact = false,
 }: {
   icon: React.ElementType;
   title: string;
@@ -34,15 +35,20 @@ const FeatureCard = ({
   to: string;
   variant: "default" | "secondary" | "fun" | "success";
   delay: string;
+  compact?: boolean;
 }) => (
   <Link to={to} className="block group">
     <div
-      className="bg-card rounded-2xl p-6 shadow-card border border-border hover:border-primary transition-all duration-300 hover:shadow-glow-primary hover:-translate-y-2 animate-pop h-full"
+      className={`bg-card rounded-xl sm:rounded-2xl shadow-card border border-border hover:border-primary transition-all duration-300 hover:shadow-glow-primary hover:-translate-y-1 sm:hover:-translate-y-2 animate-pop h-full ${
+        compact ? "p-3 sm:p-4" : "p-4 sm:p-6"
+      }`}
       style={{ animationDelay: delay }}
     >
-      <div className="flex flex-col items-center text-center gap-4">
+      <div
+        className={`flex items-center gap-3 sm:gap-4 ${compact ? "" : "flex-col text-center sm:flex-row sm:text-left"}`}
+      >
         <div
-          className={`w-14 h-14 rounded-2xl flex items-center justify-center ${
+          className={`${compact ? "w-10 h-10 sm:w-12 sm:h-12" : "w-12 h-12 sm:w-14 sm:h-14"} rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 ${
             variant === "default"
               ? "gradient-primary"
               : variant === "secondary"
@@ -52,10 +58,22 @@ const FeatureCard = ({
                   : "gradient-success"
           } shadow-soft group-hover:scale-110 transition-transform duration-300`}
         >
-          <Icon className="w-7 h-7 text-primary-foreground" />
+          <Icon
+            className={`${compact ? "w-5 h-5 sm:w-6 sm:h-6" : "w-6 h-6 sm:w-7 sm:h-7"} text-primary-foreground`}
+          />
         </div>
-        <h3 className="text-lg font-bold text-foreground">{title}</h3>
-        <p className="text-muted-foreground text-sm">{description}</p>
+        <div className={compact ? "min-w-0" : ""}>
+          <h3
+            className={`${compact ? "text-sm sm:text-base" : "text-base sm:text-lg"} font-bold text-foreground leading-tight`}
+          >
+            {title}
+          </h3>
+          <p
+            className={`text-muted-foreground ${compact ? "text-xs sm:text-sm" : "text-xs sm:text-sm"} line-clamp-2`}
+          >
+            {description}
+          </p>
+        </div>
       </div>
     </div>
   </Link>
@@ -193,30 +211,33 @@ const Index = () => {
             Choose how you want to learn today!
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
             <FeatureCard
               icon={Star}
               title="Flashcards"
-              description="Quick practice with instant feedback"
+              description="Quick practice with feedback"
               to="/practice"
               variant="secondary"
               delay="0s"
+              compact
             />
             <FeatureCard
               icon={Gamepad2}
               title="Quiz"
-              description="Multiple choice with scoring"
+              description="Multiple choice scoring"
               to="/quiz"
               variant="fun"
               delay="0.05s"
+              compact
             />
             <FeatureCard
               icon={Zap}
               title="Speed Race"
-              description="Answer fast in 60 seconds!"
+              description="60 second challenge!"
               to="/speed"
               variant="default"
               delay="0.1s"
+              compact
             />
             <FeatureCard
               icon={HelpCircle}
@@ -225,6 +246,7 @@ const Index = () => {
               to="/missing"
               variant="success"
               delay="0.15s"
+              compact
             />
             <FeatureCard
               icon={Layers}
@@ -233,6 +255,7 @@ const Index = () => {
               to="/memory"
               variant="fun"
               delay="0.2s"
+              compact
             />
             <FeatureCard
               icon={BookOpen}
@@ -241,22 +264,25 @@ const Index = () => {
               to="/stories"
               variant="secondary"
               delay="0.25s"
+              compact
             />
             <FeatureCard
               icon={Divide}
               title="Division"
-              description="Reverse multiplication practice"
+              description="Reverse multiplication"
               to="/division"
               variant="default"
               delay="0.3s"
+              compact
             />
             <FeatureCard
               icon={Sparkles}
               title="Pattern Puzzle"
-              description="Find the missing number"
+              description="Find missing numbers"
               to="/pattern"
               variant="fun"
               delay="0.35s"
+              compact
             />
             <FeatureCard
               icon={Mountain}
@@ -265,6 +291,7 @@ const Index = () => {
               to="/climb"
               variant="success"
               delay="0.4s"
+              compact
             />
           </div>
         </section>
@@ -278,11 +305,11 @@ const Index = () => {
             Reference materials and resources
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <FeatureCard
               icon={Calculator}
               title="Times Tables"
-              description="See all tables 1-12 for reference"
+              description="All tables 1-12 reference"
               to="/tables"
               variant="default"
               delay="0s"
@@ -290,7 +317,7 @@ const Index = () => {
             <FeatureCard
               icon={Lightbulb}
               title="Tips & Tricks"
-              description="Shortcuts and patterns to help you learn"
+              description="Shortcuts to help you learn"
               to="/tips"
               variant="secondary"
               delay="0.05s"
@@ -298,7 +325,7 @@ const Index = () => {
             <FeatureCard
               icon={FileText}
               title="Print Worksheets"
-              description="Download practice sheets for offline"
+              description="Practice sheets for offline"
               to="/print"
               variant="success"
               delay="0.1s"
@@ -307,28 +334,32 @@ const Index = () => {
         </section>
 
         {/* Fun Stats */}
-        <section className="py-8">
-          <div className="bg-card rounded-3xl p-8 shadow-card border border-border">
-            <div className="grid grid-cols-3 gap-4 text-center">
+        <section className="py-6 sm:py-8">
+          <div className="bg-card rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-card border border-border">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
               <div>
-                <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                   12
                 </div>
-                <p className="text-sm text-muted-foreground">Tables to Learn</p>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-secondary to-secondary/70 bg-clip-text text-transparent">
-                  144
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Multiplication Facts
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Tables
                 </p>
               </div>
               <div>
-                <div className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-secondary to-secondary/70 bg-clip-text text-transparent">
+                  144
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Facts
+                </p>
+              </div>
+              <div>
+                <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">
                   10
                 </div>
-                <p className="text-sm text-muted-foreground">Fun Games!</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  Games
+                </p>
               </div>
             </div>
           </div>

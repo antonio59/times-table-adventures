@@ -131,9 +131,9 @@ export function UserMenu() {
           <Button
             variant="outline"
             size="sm"
-            className="gap-2 border-primary/50 hover:border-primary hover:bg-primary/10"
+            className="gap-2 border-primary/50 hover:border-primary hover:bg-primary/10 min-w-[40px] min-h-[40px] p-2"
           >
-            <User className="w-4 h-4" />
+            <User className="w-5 h-5" />
             <span className="hidden md:inline">Sign In</span>
           </Button>
         </DialogTrigger>
@@ -196,16 +196,16 @@ export function UserMenu() {
                   <label className="block text-sm font-medium mb-2">
                     Pick an avatar
                   </label>
-                  <div className="flex flex-wrap gap-2 justify-center">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
                     {AVATARS.map((avatar) => (
                       <button
                         key={avatar}
                         type="button"
                         onClick={() => setSelectedAvatar(avatar)}
-                        className={`text-2xl p-1.5 rounded-lg transition-all ${
+                        className={`text-xl sm:text-2xl p-2 min-w-[44px] min-h-[44px] rounded-lg transition-all flex items-center justify-center ${
                           selectedAvatar === avatar
                             ? "bg-primary/20 ring-2 ring-primary scale-110"
-                            : "hover:bg-muted"
+                            : "hover:bg-muted active:bg-muted"
                         }`}
                       >
                         {avatar}

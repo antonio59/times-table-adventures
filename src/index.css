@@ -6,6 +6,9 @@
 
 /* Tailwind 4 CSS-based configuration */
 @theme {
+  /* Custom breakpoints */
+  --breakpoint-xs: 375px;
+
   /* Font family */
   --font-sans: "Nunito", system-ui, sans-serif;
 

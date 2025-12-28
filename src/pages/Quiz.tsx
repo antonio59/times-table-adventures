@@ -408,15 +408,15 @@ const Quiz = () => {
               </p>
             </div>
 
-            <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
-              <h2 className="text-xl font-bold mb-2">
+            <div className="bg-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-card border border-border mb-6">
+              <h2 className="text-lg sm:text-xl font-bold mb-2">
                 Which tables do you know?
               </h2>
-              <p className="text-sm text-muted-foreground mb-4">
-                Click individual tables or use the quick select buttons below
+              <p className="text-xs sm:text-sm text-muted-foreground mb-4">
+                Click tables or use quick select below
               </p>
 
-              <div className="flex flex-wrap justify-center gap-2 mb-4">
+              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-4">
                 {allTables.map((table) => (
                   <Button
                     key={table}
@@ -425,7 +425,7 @@ const Quiz = () => {
                     }
                     size="sm"
                     onClick={() => toggleTable(table)}
-                    className="w-12 h-12 text-lg font-bold relative"
+                    className="w-11 h-11 sm:w-12 sm:h-12 text-base sm:text-lg font-bold relative min-w-[44px] min-h-[44px]"
                   >
                     {table}
                     {selectedTables.includes(table) && (
@@ -435,7 +435,7 @@ const Quiz = () => {
                 ))}
               </div>
 
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
+              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
                 <p className="w-full text-xs text-muted-foreground mb-1">
                   Quick select up to:
                 </p>
@@ -445,21 +445,24 @@ const Quiz = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => selectUpTo(table)}
-                    className="text-xs"
+                    className="text-xs min-h-[36px] px-2 sm:px-3"
                   >
                     Up to {table}×
                   </Button>
                 ))}
               </div>
 
-              <h2 className="text-lg font-bold mb-2">Time per question</h2>
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
+              <h2 className="text-base sm:text-lg font-bold mb-2">
+                Time per question
+              </h2>
+              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
                 {[5, 10, 15, 20, 30].map((seconds) => (
                   <Button
                     key={seconds}
                     variant={timePerQuestion === seconds ? "default" : "game"}
                     size="sm"
                     onClick={() => setTimePerQuestion(seconds)}
+                    className="min-h-[40px] min-w-[50px]"
                   >
                     <Timer className="w-3 h-3" />
                     {seconds}s
@@ -467,14 +470,17 @@ const Quiz = () => {
                 ))}
               </div>
 
-              <h2 className="text-lg font-bold mb-2">Number of questions</h2>
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
+              <h2 className="text-base sm:text-lg font-bold mb-2">
+                Number of questions
+              </h2>
+              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
                 {[5, 10, 15, 20].map((count) => (
                   <Button
                     key={count}
                     variant={questionCount === count ? "default" : "game"}
                     size="sm"
                     onClick={() => setQuestionCount(count)}
+                    className="min-h-[40px] min-w-[50px]"
                   >
                     {count} Qs
                   </Button>
@@ -564,20 +570,20 @@ const Quiz = () => {
               initial={{ x: 50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="bg-card rounded-3xl p-8 shadow-card border border-border mb-6"
+              className="bg-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-card border border-border mb-6"
             >
-              <div className="text-center mb-8">
+              <div className="text-center mb-6 sm:mb-8">
                 <motion.div
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 200 }}
-                  className="text-5xl md:text-6xl font-extrabold"
+                  className="text-4xl sm:text-5xl md:text-6xl font-extrabold"
                 >
                   {questions[currentIndex].a} × {questions[currentIndex].b}
                 </motion.div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 {questions[currentIndex].options.map((option, idx) => {
                   const isSelected = selectedAnswer === option;
                   const isCorrectAnswer =
@@ -599,7 +605,7 @@ const Quiz = () => {
                       <Button
                         variant="game"
                         size="lg"
-                        className={`w-full text-2xl font-bold transition-all relative ${
+                        className={`w-full text-xl sm:text-2xl font-bold transition-all relative min-h-[56px] sm:min-h-[64px] ${
                           showAsCorrect
                             ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
                             : showAsWrong
@@ -614,8 +620,8 @@ const Quiz = () => {
                         {showAsCorrect && <span className="mr-2">✓</span>}
                         {showAsWrong && <span className="mr-2">✗</span>}
                         {option}
-                        {/* Keyboard shortcut hint */}
-                        <span className="absolute top-1 left-2 text-xs text-muted-foreground/50 font-mono">
+                        {/* Keyboard shortcut hint - hidden on touch devices */}
+                        <span className="absolute top-1 left-2 text-xs text-muted-foreground/50 font-mono hidden sm:block">
                           {idx + 1}
                         </span>
                       </Button>

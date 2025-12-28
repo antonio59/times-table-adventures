@@ -25,13 +25,13 @@ const Tables = () => {
         </div>
 
         {/* Controls */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-          <div className="flex gap-1 mr-2">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
+          <div className="flex gap-1 mr-1 sm:mr-2">
             <Button
               variant={viewMode === "grid" ? "default" : "outline"}
               size="sm"
               onClick={() => setViewMode("grid")}
-              className="px-2"
+              className="min-w-[40px] min-h-[40px] p-2"
             >
               <Grid3X3 className="w-4 h-4" />
             </Button>
@@ -39,7 +39,7 @@ const Tables = () => {
               variant={viewMode === "compact" ? "default" : "outline"}
               size="sm"
               onClick={() => setViewMode("compact")}
-              className="px-2"
+              className="min-w-[40px] min-h-[40px] p-2"
             >
               <List className="w-4 h-4" />
             </Button>
@@ -49,6 +49,7 @@ const Tables = () => {
             variant={selectedTable === null ? "secondary" : "outline"}
             size="sm"
             onClick={() => setSelectedTable(null)}
+            className="min-w-[40px] min-h-[40px]"
           >
             All
           </Button>
@@ -60,7 +61,7 @@ const Tables = () => {
               onClick={() =>
                 setSelectedTable(selectedTable === num ? null : num)
               }
-              className="w-9 h-9 p-0"
+              className="w-10 h-10 p-0 min-w-[40px] min-h-[40px] text-sm font-bold"
             >
               {num}
             </Button>
@@ -118,8 +119,11 @@ const Tables = () => {
 
         {/* Compact View - All tables in one grid */}
         {viewMode === "compact" && (
-          <div className="bg-card rounded-xl p-4 shadow-soft border border-border overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="bg-card rounded-xl p-2 sm:p-4 shadow-soft border border-border overflow-x-auto">
+            <p className="text-xs text-muted-foreground text-center mb-2 sm:hidden">
+              Swipe left/right to see all columns
+            </p>
+            <table className="w-full text-xs sm:text-sm min-w-[500px]">
               <thead>
                 <tr>
                   <th className="p-2 text-left font-bold text-muted-foreground">
@@ -181,10 +185,9 @@ const Tables = () => {
         )}
 
         {/* Quick reference tip */}
-        <div className="mt-6 text-center">
-          <p className="text-xs text-muted-foreground">
-            Tip: Click any number in the header row or first column to highlight
-            that table
+        <div className="mt-4 sm:mt-6 text-center">
+          <p className="text-xs text-muted-foreground hidden sm:block">
+            Tip: Click any number to highlight that table
           </p>
         </div>
       </div>

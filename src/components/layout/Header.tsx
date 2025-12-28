@@ -37,16 +37,22 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-card/80 backdrop-blur-md border-b border-border shadow-soft no-print">
-      <div className="container mx-auto px-4 py-3">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="text-3xl animate-bounce-gentle">✨</span>
-            <h1 className="text-xl md:text-2xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Times Table Fun!
+      <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-3">
+        <div className="flex items-center justify-between gap-2">
+          <Link
+            to="/"
+            className="flex items-center gap-1.5 sm:gap-2 group shrink-0"
+          >
+            <span className="text-2xl sm:text-3xl animate-bounce-gentle">
+              ✨
+            </span>
+            <h1 className="text-base sm:text-xl md:text-2xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap">
+              <span className="hidden xs:inline">Times Table Fun!</span>
+              <span className="xs:hidden">TTF!</span>
             </h1>
           </Link>
 
-          <nav className="flex items-center gap-1 md:gap-2">
+          <nav className="flex items-center gap-1 sm:gap-1.5 md:gap-2 overflow-x-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = item.path.startsWith("/#")
@@ -62,14 +68,14 @@ const Header = () => {
                     variant={isActive ? "default" : "ghost"}
                     size="sm"
                     onClick={() => handleNavClick(item.path)}
-                    className={
+                    className={`min-w-[40px] min-h-[40px] p-2 ${
                       isActive
                         ? ""
                         : "text-muted-foreground hover:text-foreground"
-                    }
+                    }`}
                   >
-                    <Icon className="w-4 h-4" />
-                    <span className="hidden md:inline">{item.label}</span>
+                    <Icon className="w-5 h-5 shrink-0" />
+                    <span className="hidden md:inline ml-1">{item.label}</span>
                   </Button>
                 );
               }
@@ -79,14 +85,14 @@ const Header = () => {
                   <Button
                     variant={isActive ? "default" : "ghost"}
                     size="sm"
-                    className={
+                    className={`min-w-[40px] min-h-[40px] p-2 ${
                       isActive
                         ? ""
                         : "text-muted-foreground hover:text-foreground"
-                    }
+                    }`}
                   >
-                    <Icon className="w-4 h-4" />
-                    <span className="hidden md:inline">{item.label}</span>
+                    <Icon className="w-5 h-5 shrink-0" />
+                    <span className="hidden md:inline ml-1">{item.label}</span>
                   </Button>
                 </Link>
               );
