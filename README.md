@@ -1,20 +1,25 @@
 # Times Table Adventures
 
-A fun, interactive times table learning app for kids! Built with React, TypeScript, and Convex for progress tracking.
+A fun, interactive times table learning app for kids! Built with React 19, TypeScript, and Convex for progress tracking.
+
+**Live Demo:** [ttf.antoniosmith.xyz](https://ttf.antoniosmith.xyz)
 
 ## Features
 
-### Games & Practice Modes
+### Games & Practice Modes (12 Games!)
 
 - **Quiz Challenge** - Multiple choice questions with customizable time limits
 - **Speed Race** - Answer as many as you can in 60 seconds
 - **Practice Mode** - Flashcard-style practice with instant feedback
 - **Memory Match** - Match equations with their answers
 - **Missing Number** - Find the missing number in equations (e.g., `? × 4 = 20`)
-- **Word Problems** - 70+ story-based multiplication problems
+- **Word Problems** - 100+ story-based multiplication problems across 10 categories
 - **Division Challenge** - Reverse multiplication practice
 - **Pattern Puzzle** - Find missing numbers in sequences
 - **Times Table Climb** - Mountain climbing adventure with lives
+- **Daily Challenge** - Unique daily puzzle with streak tracking
+- **Number Bonds** - Find the factors that multiply to make a product
+- **True or False** - Quick-fire equation verification with optional timed mode
 
 ### Progress Tracking (Optional)
 
@@ -30,13 +35,15 @@ A fun, interactive times table learning app for kids! Built with React, TypeScri
 - Colorful, playful UI with animations
 - Encouraging feedback messages
 - Confetti celebrations on streaks and perfect scores
+- Sound effects with mute toggle
+- Keyboard shortcuts for power users
 - "Why was I wrong?" help button with learning tips
-- Works great on tablets and phones
+- Mobile-optimized with 44px touch targets
 
 ## Tech Stack
 
-- **Frontend**: React 18, TypeScript, Vite
-- **Styling**: Tailwind CSS, shadcn/ui components
+- **Frontend**: React 19, TypeScript, Vite 6
+- **Styling**: Tailwind CSS 4, shadcn/ui components
 - **Animations**: Framer Motion, canvas-confetti
 - **Backend**: Convex (real-time database)
 - **Package Manager**: Bun
@@ -46,7 +53,7 @@ A fun, interactive times table learning app for kids! Built with React, TypeScri
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) (or Node.js 18+)
+- [Bun](https://bun.sh/) (recommended) or Node.js 20+
 - [Convex account](https://convex.dev/) (free)
 
 ### Installation
@@ -119,28 +126,39 @@ times-table-adventures/
 │   ├── components/
 │   │   ├── ui/            # shadcn/ui components
 │   │   ├── layout/        # Header, Layout
-│   │   ├── AnimatedElements.tsx  # Framer Motion animations
-│   │   ├── ErrorBoundary.tsx     # Error handling
-│   │   ├── WrongAnswerHelp.tsx   # Learning tips
-│   │   ├── UserMenu.tsx   # User dropdown/login
+│   │   ├── ErrorBoundary.tsx
+│   │   ├── SoundToggle.tsx
+│   │   ├── KeyboardShortcutsHelp.tsx
+│   │   ├── WrongAnswerHelp.tsx
+│   │   ├── UserMenu.tsx
 │   │   └── SaveProgressPrompt.tsx
 │   ├── contexts/
-│   │   └── UserContext.tsx # User state management
+│   │   ├── UserContext.tsx   # User state management
+│   │   └── SoundContext.tsx  # Sound effects
+│   ├── hooks/
+│   │   └── use-keyboard-shortcuts.ts
 │   ├── lib/
-│   │   └── confetti.ts    # Confetti effects
+│   │   ├── confetti.ts       # Confetti effects
+│   │   └── daily-challenge.ts # Daily puzzle generator
 │   ├── pages/
 │   │   ├── Quiz.tsx
 │   │   ├── Practice.tsx
 │   │   ├── SpeedRace.tsx
 │   │   ├── MemoryMatch.tsx
 │   │   ├── MissingNumber.tsx
+│   │   ├── WordProblems.tsx
 │   │   ├── DivisionChallenge.tsx
 │   │   ├── PatternPuzzle.tsx
 │   │   ├── TimesTableClimb.tsx
-│   │   ├── Progress.tsx   # Stats dashboard
+│   │   ├── DailyChallenge.tsx
+│   │   ├── NumberBonds.tsx
+│   │   ├── TrueFalse.tsx
+│   │   ├── Progress.tsx
 │   │   └── ...
 │   ├── App.tsx
 │   └── main.tsx
+├── scripts/
+│   └── install-native-deps.js  # Bun native deps workaround
 ├── .github/
 │   └── workflows/         # CI/CD pipelines
 ├── netlify.toml           # Netlify configuration
@@ -161,7 +179,7 @@ Simple name-based profiles (no passwords needed for kids):
 
 Tracks each game played:
 
-- `gameType` - quiz, practice, speed, memory, missing, stories
+- `gameType` - quiz, practice, speed, memory, missing, stories, climb, division, pattern, daily, bonds, truefalse
 - `score`, `correctAnswers`, `totalQuestions`
 - `bestStreak`, `timeSpent`
 - `tablesUsed` - Which times tables were practiced
@@ -196,19 +214,9 @@ The project is configured for Netlify deployment:
    - Build command: `bun run build`
    - Publish directory: `dist`
 
-### Custom Domain with Subdomain
-
-To use a subdomain without changing your nameservers:
-
-1. Add a CNAME record in your DNS provider:
-   - **Name:** your subdomain (e.g., `math`)
-   - **Value:** `your-site.netlify.app`
-2. Add the custom domain in Netlify's domain settings
-3. SSL certificate will be provisioned automatically
-
 ### GitHub Actions CI/CD
 
-The project includes automated CI/CD workflows:
+The project includes automated CI/CD workflows using Bun:
 
 - **CI** (`ci.yml`) - Runs on PRs: linting, type checking, and build
 - **Deploy** (`deploy.yml`) - Runs on push to main: deploys Convex backend and frontend to Netlify

@@ -1,9 +1,10 @@
 [build]
-  command = "npm install --include=optional && npm run build"
+  command = "bun install && bun run build"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
+  BUN_VERSION = "1"
 
 # Handle client-side routing for SPA
 [[redirects]]

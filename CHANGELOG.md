@@ -5,6 +5,52 @@ All notable changes to Times Table Adventures will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-12-28
+
+### Added - New Games
+
+- **Number Bonds** (`/bonds`) - Find factors that multiply to make a given product
+  - Two question types: find both factors, or find missing factor when one is given
+  - Configurable tables and question count
+  - Streak tracking and celebrations
+
+- **True or False** (`/truefalse`) - Quick-fire equation verification
+  - Two game modes:
+    - **Questions mode**: Answer 10, 15, 20, or 30 questions
+    - **Timed mode**: Answer as many as possible in 60 seconds
+  - Shows correct answer when wrong
+  - Configurable tables
+
+### Added - Word Problem Scenarios
+
+- **40+ new story templates** across 5 new categories:
+  - **Space & Astronomy** - Rockets, satellites, astronauts, planets, moon rocks
+  - **Music & Entertainment** - Bands, concerts, choirs, DJs, movies, streaming
+  - **Birthday Parties** - Cake, presents, party bags, games, magicians
+  - **Gardening** - Carrots, sunflowers, greenhouses, orchards, pumpkins
+  - **Technology & Gaming** - Video games, apps, coding, YouTubers, VR
+- Word problems now has **100+ total scenarios** (up from 70)
+
+### Changed - Package Manager
+
+- Switched from npm to **Bun** for faster installs and builds
+- Switched from `@vitejs/plugin-react-swc` to `@vitejs/plugin-react` for better Bun compatibility
+- Updated GitHub Actions CI/CD workflows to use `oven-sh/setup-bun@v2`
+- Added `scripts/install-native-deps.js` to handle platform-specific native binaries with Bun
+- Added `trustedDependencies` in package.json for Bun
+
+### Changed - Homepage
+
+- Added game cards for Number Bonds and True or False
+- Updated game count from 10 to 12
+- Updated word problems description to "100+ story scenarios"
+
+### Fixed
+
+- Resolved native dependency issues with Rollup, esbuild, Tailwind oxide, and LightningCSS when using Bun
+
+---
+
 ## [1.3.0] - 2025-12-26
 
 ### Added - Animations & Gamification
