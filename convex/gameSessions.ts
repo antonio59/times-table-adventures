@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
-// Game type definition
+// Game type definition - must match schema.ts and UserContext.tsx
 const gameTypeValidator = v.union(
   v.literal("practice"),
   v.literal("quiz"),
@@ -13,6 +13,8 @@ const gameTypeValidator = v.union(
   v.literal("division"),
   v.literal("pattern"),
   v.literal("daily"),
+  v.literal("bonds"),
+  v.literal("truefalse"),
 );
 
 // Record a completed game session

@@ -9,6 +9,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
 
+// Game types - must match convex/schema.ts and convex/gameSessions.ts
 type GameType =
   | "practice"
   | "quiz"
@@ -19,7 +20,9 @@ type GameType =
   | "climb"
   | "division"
   | "pattern"
-  | "daily";
+  | "daily"
+  | "bonds"
+  | "truefalse";
 
 export interface GameSession {
   gameType: GameType;

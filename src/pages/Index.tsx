@@ -15,6 +15,8 @@ import {
   Divide,
   Mountain,
   Calendar,
+  Link2,
+  ThumbsUp,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
@@ -260,7 +262,7 @@ const Index = () => {
             <FeatureCard
               icon={BookOpen}
               title="Word Problems"
-              description="70+ story scenarios"
+              description="100+ story scenarios"
               to="/stories"
               variant="secondary"
               delay="0.25s"
@@ -291,6 +293,24 @@ const Index = () => {
               to="/climb"
               variant="success"
               delay="0.4s"
+              compact
+            />
+            <FeatureCard
+              icon={Link2}
+              title="Number Bonds"
+              description="Find the factors!"
+              to="/bonds"
+              variant="default"
+              delay="0.45s"
+              compact
+            />
+            <FeatureCard
+              icon={ThumbsUp}
+              title="True or False"
+              description="Quick thinking game"
+              to="/truefalse"
+              variant="secondary"
+              delay="0.5s"
               compact
             />
           </div>
@@ -355,7 +375,7 @@ const Index = () => {
               </div>
               <div>
                 <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">
-                  10
+                  12
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground">
                   Games

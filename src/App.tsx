@@ -22,6 +22,8 @@ const DivisionChallenge = lazy(() => import("./pages/DivisionChallenge"));
 const PatternPuzzle = lazy(() => import("./pages/PatternPuzzle"));
 const TimesTableClimb = lazy(() => import("./pages/TimesTableClimb"));
 const DailyChallenge = lazy(() => import("./pages/DailyChallenge"));
+const NumberBonds = lazy(() => import("./pages/NumberBonds"));
+const TrueFalse = lazy(() => import("./pages/TrueFalse"));
 const Tips = lazy(() => import("./pages/Tips"));
 const Progress = lazy(() => import("./pages/Progress"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -61,6 +63,8 @@ const App = () => (
                   <Route path="/pattern" element={<PatternPuzzle />} />
                   <Route path="/climb" element={<TimesTableClimb />} />
                   <Route path="/daily" element={<DailyChallenge />} />
+                  <Route path="/bonds" element={<NumberBonds />} />
+                  <Route path="/truefalse" element={<TrueFalse />} />
                   <Route path="/tips" element={<Tips />} />
                   <Route path="/print" element={<Print />} />
                   <Route path="/progress" element={<Progress />} />

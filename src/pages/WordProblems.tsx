@@ -578,6 +578,289 @@ const storyTemplates = [
       hint: `${a} arms × ${b} buttons`,
     }),
   },
+
+  // Space & Astronomy
+  {
+    template: (a: number, b: number) => ({
+      story: `The space station has ${a} modules. Each module has ${b} astronauts.`,
+      question: "How many astronauts are on the space station?",
+      hint: `${a} modules × ${b} astronauts`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `An astronaut collected ${b} moon rocks each day for ${a} days.`,
+      question: "How many moon rocks were collected?",
+      hint: `${a} days × ${b} rocks`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The telescope spotted ${a} galaxies. Each galaxy has ${b} visible stars.`,
+      question: "How many stars were spotted in total?",
+      hint: `${a} galaxies × ${b} stars`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A satellite orbits Earth ${b} times per day. It has been in orbit for ${a} days.`,
+      question: "How many orbits has the satellite completed?",
+      hint: `${a} days × ${b} orbits`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `NASA launched ${a} rockets this year. Each rocket carried ${b} experiments.`,
+      question: "How many experiments were sent to space?",
+      hint: `${a} rockets × ${b} experiments`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The Mars rover has ${a} cameras. Each camera takes ${b} photos per hour.`,
+      question: "How many photos are taken each hour?",
+      hint: `${a} cameras × ${b} photos`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A comet passes by ${a} planets. Each planet sees the comet for ${b} nights.`,
+      question: "How many planet-nights of viewing are there?",
+      hint: `${a} planets × ${b} nights`,
+    }),
+  },
+
+  // Music & Entertainment
+  {
+    template: (a: number, b: number) => ({
+      story: `The band has ${a} members. Each member has ${b} instruments.`,
+      question: "How many instruments does the band have?",
+      hint: `${a} members × ${b} instruments`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A concert has ${a} songs. Each song is ${b} minutes long.`,
+      question: "How many minutes is the entire concert?",
+      hint: `${a} songs × ${b} minutes`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The choir has ${a} rows of singers. Each row has ${b} singers.`,
+      question: "How many singers are in the choir?",
+      hint: `${a} rows × ${b} singers`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A DJ played ${a} sets. Each set had ${b} songs.`,
+      question: "How many songs did the DJ play?",
+      hint: `${a} sets × ${b} songs`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The movie theater has ${a} screens. Each screen shows ${b} movies per day.`,
+      question: "How many movie showings are there each day?",
+      hint: `${a} screens × ${b} movies`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A dancer practiced ${b} hours each day for ${a} days.`,
+      question: "How many hours of practice was that?",
+      hint: `${a} days × ${b} hours`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The orchestra has ${a} sections. Each section has ${b} musicians.`,
+      question: "How many musicians are in the orchestra?",
+      hint: `${a} sections × ${b} musicians`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A streaming service added ${a} new shows. Each show has ${b} episodes.`,
+      question: "How many new episodes are available?",
+      hint: `${a} shows × ${b} episodes`,
+    }),
+  },
+
+  // Birthday Parties
+  {
+    template: (a: number, b: number) => ({
+      story: `At the birthday party, ${a} children each got ${b} pieces of cake.`,
+      question: "How many pieces of cake were given out?",
+      hint: `${a} children × ${b} pieces`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The party planner set up ${a} tables with ${b} chairs each.`,
+      question: "How many chairs were set up?",
+      hint: `${a} tables × ${b} chairs`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `${a} friends came to the party. Each friend brought ${b} gifts.`,
+      question: "How many gifts were brought to the party?",
+      hint: `${a} friends × ${b} gifts`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The birthday cake had ${a} layers. Each layer had ${b} strawberries on top.`,
+      question: "How many strawberries decorated the cake?",
+      hint: `${a} layers × ${b} strawberries`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `Party bags were filled with ${b} candies each. There were ${a} party bags.`,
+      question: "How many candies were needed?",
+      hint: `${a} bags × ${b} candies`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The magician performed ${a} magic tricks. Each trick amazed ${b} kids.`,
+      question: "How many times were kids amazed?",
+      hint: `${a} tricks × ${b} amazed kids`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `${a} party games were played. Each game lasted ${b} minutes.`,
+      question: "How many minutes of games were played?",
+      hint: `${a} games × ${b} minutes`,
+    }),
+  },
+
+  // Gardening
+  {
+    template: (a: number, b: number) => ({
+      story: `The gardener planted ${a} rows of carrots. Each row has ${b} carrots.`,
+      question: "How many carrots were planted?",
+      hint: `${a} rows × ${b} carrots`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `There are ${a} flower beds. Each bed has ${b} sunflowers.`,
+      question: "How many sunflowers are in the garden?",
+      hint: `${a} beds × ${b} sunflowers`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The greenhouse has ${a} shelves. Each shelf holds ${b} plant pots.`,
+      question: "How many plant pots can the greenhouse hold?",
+      hint: `${a} shelves × ${b} pots`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A farmer waters ${b} plants every hour. She works for ${a} hours.`,
+      question: "How many plants does she water?",
+      hint: `${a} hours × ${b} plants`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The orchard has ${a} rows of fruit trees. Each row has ${b} trees.`,
+      question: "How many fruit trees are in the orchard?",
+      hint: `${a} rows × ${b} trees`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `${a} pumpkin patches each grew ${b} pumpkins.`,
+      question: "How many pumpkins grew in total?",
+      hint: `${a} patches × ${b} pumpkins`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The garden center sold ${a} packs of seeds. Each pack has ${b} seeds.`,
+      question: "How many seeds were sold?",
+      hint: `${a} packs × ${b} seeds`,
+    }),
+  },
+
+  // Technology & Gaming
+  {
+    template: (a: number, b: number) => ({
+      story: `A video game has ${a} levels. Each level has ${b} coins to collect.`,
+      question: "How many coins are in the whole game?",
+      hint: `${a} levels × ${b} coins`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The gaming tournament has ${a} teams. Each team has ${b} players.`,
+      question: "How many players are in the tournament?",
+      hint: `${a} teams × ${b} players`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A programmer wrote ${a} apps. Each app has ${b} features.`,
+      question: "How many features were programmed in total?",
+      hint: `${a} apps × ${b} features`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The tablet has ${a} screens of apps. Each screen shows ${b} apps.`,
+      question: "How many apps are on the tablet?",
+      hint: `${a} screens × ${b} apps`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A gamer played for ${a} hours. They earned ${b} achievement points each hour.`,
+      question: "How many achievement points did they earn?",
+      hint: `${a} hours × ${b} points`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The computer lab has ${a} rows of computers. Each row has ${b} computers.`,
+      question: "How many computers are in the lab?",
+      hint: `${a} rows × ${b} computers`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A YouTuber uploads ${b} videos each week. They've been uploading for ${a} weeks.`,
+      question: "How many videos have they uploaded?",
+      hint: `${a} weeks × ${b} videos`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The VR headset comes with ${a} game packs. Each pack has ${b} games.`,
+      question: "How many games come with the headset?",
+      hint: `${a} packs × ${b} games`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `A coding class has ${a} projects. Each project needs ${b} hours to complete.`,
+      question: "How many hours of coding is needed?",
+      hint: `${a} projects × ${b} hours`,
+    }),
+  },
+  {
+    template: (a: number, b: number) => ({
+      story: `The smartphone has ${a} folders. Each folder contains ${b} apps.`,
+      question: "How many apps are organized in folders?",
+      hint: `${a} folders × ${b} apps`,
+    }),
+  },
 ];
 
 const generateProblem = (selectedTables: number[]): Problem => {

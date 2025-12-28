@@ -25,6 +25,8 @@ export default defineSchema({
       v.literal("division"),
       v.literal("pattern"),
       v.literal("daily"),
+      v.literal("bonds"),
+      v.literal("truefalse"),
     ),
     tablesUsed: v.array(v.number()), // which times tables were practiced
     score: v.number(),
