@@ -1,7 +1,7 @@
 import React, {
   createContext,
-  useContext,
   useState,
+  useContext,
   useEffect,
   useCallback,
   useRef,
@@ -168,6 +168,15 @@ const soundPlayers: Record<SoundEffect, (ctx: AudioContext) => void> = {
   whoosh: playWhooshSound,
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
+export function useSound() {
+  const context = useContext(SoundContext);
+  if (context === undefined) {
+    throw new Error("useSound must be used within a SoundProvider");
+  }
+  return context;
+}
+
 export function SoundProvider({ children }: { children: React.ReactNode }) {
   const [enabled, setEnabledState] = useState(true);
   const enabledRef = useRef(true);
@@ -214,12 +223,4 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       {children}
     </SoundContext.Provider>
   );
-}
-
-export function useSound() {
-  const context = useContext(SoundContext);
-  if (context === undefined) {
-    throw new Error("useSound must be used within a SoundProvider");
-  }
-  return context;
 }

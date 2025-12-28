@@ -58,6 +58,31 @@ const TimesTableClimb = () => {
 
   const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
+  const handleWrongAnswer = useCallback(() => {
+    const timeMs = Date.now() - levelStartTime.current;
+    setTableResults((prev) => [
+      ...prev,
+      { tableNumber: selectedTable, correct: false, timeMs },
+    ]);
+
+    setMistakes((prev) => {
+      const newMistakes = prev + 1;
+      if (newMistakes >= maxMistakes) {
+        setGameState("fallen");
+      }
+      return newMistakes;
+    });
+
+    setShowWrong(true);
+    setTimeout(() => {
+      setShowWrong(false);
+      setUserAnswer("");
+      setTimeLeft(timePerLevel);
+      levelStartTime.current = Date.now();
+      inputRef.current?.focus();
+    }, 1500);
+  }, [selectedTable, maxMistakes, timePerLevel]);
+
   const startGame = useCallback(() => {
     setLevels(generateLevels(selectedTable));
     setCurrentLevel(0);
@@ -89,32 +114,7 @@ const TimesTableClimb = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [gameState, currentLevel]);
-
-  const handleWrongAnswer = () => {
-    const timeMs = Date.now() - levelStartTime.current;
-    setTableResults((prev) => [
-      ...prev,
-      { tableNumber: selectedTable, correct: false, timeMs },
-    ]);
-
-    setMistakes((prev) => {
-      const newMistakes = prev + 1;
-      if (newMistakes >= maxMistakes) {
-        setGameState("fallen");
-      }
-      return newMistakes;
-    });
-
-    setShowWrong(true);
-    setTimeout(() => {
-      setShowWrong(false);
-      setUserAnswer("");
-      setTimeLeft(timePerLevel);
-      levelStartTime.current = Date.now();
-      inputRef.current?.focus();
-    }, 1500);
-  };
+  }, [gameState, currentLevel, handleWrongAnswer]);
 
   const checkAnswer = () => {
     if (!levels[currentLevel] || userAnswer === "") return;
