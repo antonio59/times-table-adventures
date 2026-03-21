@@ -51,6 +51,7 @@ interface UserContextType {
   userAvatar: string | null;
   isLoading: boolean;
   isLoggedIn: boolean;
+  isRecording: boolean; // True when saving game progress
   pendingSession: PendingSession | null;
   login: (name: string, pin: string, avatar?: string) => Promise<void>;
   signup: (name: string, pin: string, avatar?: string) => Promise<void>;
@@ -74,6 +75,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [userName, setUserName] = useState<string | null>(null);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
   const [pendingSession, setPendingSession] = useState<PendingSession | null>(
     null,
   );
@@ -175,37 +177,42 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     ): Promise<string[]> => {
       if (!userId) return [];
 
-      // Record the session
-      await recordSession({
-        userId,
-        gameType: session.gameType,
-        tablesUsed: session.tablesUsed,
-        score: session.score,
-        totalQuestions: session.totalQuestions,
-        correctAnswers: session.correctAnswers,
-        bestStreak: session.bestStreak,
-        timeSpent: session.timeSpent,
-      });
-
-      // Record table mastery if provided
-      if (tableResults && tableResults.length > 0) {
-        await updateMasteryBatch({
+      setIsRecording(true);
+      try {
+        // Record the session
+        await recordSession({
           userId,
-          results: tableResults,
+          gameType: session.gameType,
+          tablesUsed: session.tablesUsed,
+          score: session.score,
+          totalQuestions: session.totalQuestions,
+          correctAnswers: session.correctAnswers,
+          bestStreak: session.bestStreak,
+          timeSpent: session.timeSpent,
         });
+
+        // Record table mastery if provided
+        if (tableResults && tableResults.length > 0) {
+          await updateMasteryBatch({
+            userId,
+            results: tableResults,
+          });
+        }
+
+        // Check for new achievements
+        const newAchievements = await checkAchievements({
+          userId,
+          gameType: session.gameType,
+          score: session.score,
+          totalQuestions: session.totalQuestions,
+          correctAnswers: session.correctAnswers,
+          bestStreak: session.bestStreak,
+        });
+
+        return newAchievements;
+      } finally {
+        setIsRecording(false);
       }
-
-      // Check for new achievements
-      const newAchievements = await checkAchievements({
-        userId,
-        gameType: session.gameType,
-        score: session.score,
-        totalQuestions: session.totalQuestions,
-        correctAnswers: session.correctAnswers,
-        bestStreak: session.bestStreak,
-      });
-
-      return newAchievements;
     },
     [userId, recordSession, updateMasteryBatch, checkAchievements],
   );
@@ -233,6 +240,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         userAvatar,
         isLoading,
         isLoggedIn: !!userId,
+        isRecording,
         pendingSession,
         login,
         signup,

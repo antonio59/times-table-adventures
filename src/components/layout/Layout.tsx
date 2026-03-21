@@ -1,4 +1,6 @@
 import { ReactNode } from "react";
+import { useUser } from "@/contexts/UserContext";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 import Header from "./Header";
 
 interface LayoutProps {
@@ -6,6 +8,8 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const { isRecording } = useUser();
+
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       {/* Skip to content link for keyboard accessibility */}
@@ -15,6 +19,14 @@ const Layout = ({ children }: LayoutProps) => {
       >
         Skip to main content
       </a>
+
+      {/* Global loading overlay for save operations */}
+      <LoadingOverlay
+        isLoading={isRecording}
+        message="Saving your progress..."
+        subMessage="Keep up the great work!"
+      />
+
       <Header />
       <main id="main-content" className="flex-1 container mx-auto px-3 sm:px-4 py-4 sm:py-6 overflow-x-hidden">
         {children}
