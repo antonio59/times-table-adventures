@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### CI/CD
 
 - Add automatic changelog workflow
+- Add automatic changelog workflow
 
 ### Changes
 
@@ -221,7 +222,12 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 ### Chores
 
 - Add git-cliff config for changelog generation
+- Add git-cliff config for changelog generation
 - Dependency updates and accessibility improvements
+
+### Documentation
+
+- Update changelog [skip ci]
 
 ### Features
 
