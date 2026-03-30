@@ -223,10 +223,12 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 
 - Add git-cliff config for changelog generation
 - Add git-cliff config for changelog generation
+- Add git-cliff config for changelog generation
 - Dependency updates and accessibility improvements
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 
 ### Features
