@@ -57,6 +57,12 @@ export function UserMenu() {
 
   const allUsers = useQuery(api.users.getAllUsers, {});
 
+  useEffect(() => {
+    if (allUsers && allUsers.length === 0 && !dialogOpen) {
+      setAuthMode("signup");
+    }
+  }, [allUsers, dialogOpen]);
+
   const resetForm = () => {
     setAuthMode("profiles");
     setSelectedProfile(null);
