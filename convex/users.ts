@@ -33,9 +33,9 @@ export const createUser = mutation({
       throw new Error("Username already taken");
     }
 
-    // Validate PIN is 4 digits
-    if (!/^\d{4}$/.test(args.pin)) {
-      throw new Error("PIN must be 4 digits");
+    // Validate passcode is 6 digits
+    if (!/^\d{6}$/.test(args.pin)) {
+      throw new Error("Passcode must be 6 digits");
     }
 
     // Create new user

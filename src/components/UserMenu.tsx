@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import { User, LogOut, Trophy, ChevronDown, ArrowLeft, Plus } from "lucide-react";
 import { toast } from "sonner";
 
-const PIN_LENGTH = 4;
+const PIN_LENGTH = 6;
 const PROFILE_COLORS = [
   "from-yellow-400 to-orange-500",
   "from-blue-400 to-purple-500",
@@ -87,7 +87,7 @@ export function UserMenu() {
         toast.success("Welcome back!");
         handleClose(false);
       } catch (err) {
-        setError("Incorrect PIN. Try again!");
+        setError("Incorrect passcode. Try again!");
         setPin("");
         setTimeout(() => setError(""), 2000);
       } finally {
@@ -103,8 +103,8 @@ export function UserMenu() {
 
   const handleSignup = async () => {
     if (!signupName.trim()) { setError("Enter your name!"); return; }
-    if (signupPin.length !== PIN_LENGTH) { setError(`PIN must be ${PIN_LENGTH} digits`); return; }
-    if (signupPin !== signupPinConfirm) { setError("PINs don't match!"); return; }
+    if (signupPin.length !== PIN_LENGTH) { setError(`Passcode must be ${PIN_LENGTH} digits`); return; }
+    if (signupPin !== signupPinConfirm) { setError("Passcodes don't match!"); return; }
     setIsSubmitting(true);
     setError("");
     try {
@@ -217,7 +217,7 @@ export function UserMenu() {
 
               <div className="text-center mb-6">
                 <div className="text-2xl mb-2">🔒</div>
-                <h3 className="text-lg font-semibold mb-4">Enter your PIN</h3>
+                <h3 className="text-lg font-semibold mb-4">Enter your passcode</h3>
                 <div className="flex justify-center gap-3 mb-2">
                   {[...Array(PIN_LENGTH)].map((_, i) => (
                     <div
@@ -327,7 +327,7 @@ export function UserMenu() {
 
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Create a 4-digit PIN
+                    Create a 6-digit passcode
                   </label>
                   <input
                     type="password"
@@ -339,15 +339,15 @@ export function UserMenu() {
                       );
                       setError("");
                     }}
-                    placeholder="Enter 4 digits..."
+                    placeholder="Enter 6 digits..."
                     className="w-full h-11 px-4 text-2xl text-center tracking-[0.5em] border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background font-mono"
-                    maxLength={4}
+                    maxLength={6}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Confirm PIN
+                    Confirm passcode
                   </label>
                   <input
                     type="password"
@@ -355,13 +355,13 @@ export function UserMenu() {
                     value={signupPinConfirm}
                     onChange={(e) => {
                       setSignupPinConfirm(
-                        e.target.value.replace(/\D/g, "").slice(0, 4)
+                        e.target.value.replace(/\D/g, "").slice(0, 6)
                       );
                       setError("");
                     }}
-                    placeholder="Re-enter PIN..."
+                    placeholder="Confirm passcode"
                     className="w-full h-11 px-4 text-2xl text-center tracking-[0.5em] border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background font-mono"
-                    maxLength={4}
+                    maxLength={6}
                   />
                 </div>
 

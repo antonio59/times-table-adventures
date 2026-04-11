@@ -12,6 +12,8 @@ import {
 import { toast } from "sonner";
 import { Save, X, ArrowLeft } from "lucide-react";
 
+const PIN_LENGTH = 6;
+
 const AVATARS = [
   "🦊",
   "🐼",
@@ -64,7 +66,7 @@ export function SaveProgressPrompt({
   const checkAchievements = useMutation(api.achievements.checkAchievements);
 
   const handlePinChange = (value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 4);
+    const digits = value.replace(/\D/g, "").slice(0, 6);
     setPin(digits);
     setError("");
   };
@@ -111,7 +113,7 @@ export function SaveProgressPrompt({
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || pin.length !== 4) return;
+    if (!name.trim() || pin.length !== PIN_LENGTH) return;
 
     setIsSaving(true);
     setError("");
@@ -137,7 +139,7 @@ export function SaveProgressPrompt({
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || pin.length !== 4) return;
+    if (!name.trim() || pin.length !== PIN_LENGTH) return;
 
     setIsSaving(true);
     setError("");
@@ -280,7 +282,7 @@ export function SaveProgressPrompt({
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Create a 4-digit PIN
+                Create a 6-digit passcode
               </label>
               <p className="text-xs text-muted-foreground mb-2">
                 Remember this to sign in later!
@@ -290,12 +292,11 @@ export function SaveProgressPrompt({
                 inputMode="numeric"
                 value={pin}
                 onChange={(e) => handlePinChange(e.target.value)}
-                placeholder="Enter 4 digits..."
-                className="w-full h-11 px-4 text-2xl text-center tracking-[0.5em] border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background font-mono"
-                maxLength={4}
+                placeholder="Enter 6 digits..."
+                maxLength={6}
               />
               <div className="flex justify-center gap-2 mt-2">
-                {[0, 1, 2, 3].map((i) => (
+                {[0, 1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
                     className={`w-3 h-3 rounded-full transition-colors ${
@@ -316,7 +317,7 @@ export function SaveProgressPrompt({
               className="w-full"
               disabled={
                 !name.trim() ||
-                pin.length !== 4 ||
+                pin.length !== PIN_LENGTH ||
                 isSaving ||
                 userExists === true
               }
@@ -360,9 +361,9 @@ export function SaveProgressPrompt({
                 inputMode="numeric"
                 value={pin}
                 onChange={(e) => handlePinChange(e.target.value)}
-                placeholder="Enter your 4-digit PIN..."
+                placeholder="Enter your 6-digit passcode..."
                 className="w-full h-11 px-4 text-2xl text-center tracking-[0.5em] border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background font-mono"
-                maxLength={4}
+                maxLength={6}
               />
               <div className="flex justify-center gap-2 mt-2">
                 {[0, 1, 2, 3].map((i) => (
@@ -384,7 +385,7 @@ export function SaveProgressPrompt({
               type="submit"
               size="lg"
               className="w-full"
-              disabled={!name.trim() || pin.length !== 4 || isSaving}
+              disabled={!name.trim() || pin.length !== PIN_LENGTH || isSaving}
             >
               <Save className="w-4 h-4 mr-2" />
               {isSaving ? "Saving..." : "Sign In & Save"}
