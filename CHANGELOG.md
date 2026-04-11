@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
+- Merge pull request #1 from antonio59/feat/profile-pin-login
+
+feat: profile selection + PIN numpad login
 - Fix ESLint warnings
 
 - TimesTableClimb: wrap handleWrongAnswer in useCallback and add to useEffect deps
@@ -231,9 +234,12 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
+- Profile selection + PIN numpad login (music-request-v2 style)
 - Add global loading states for Convex mutations
 
 
