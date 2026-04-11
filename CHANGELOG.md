@@ -236,9 +236,11 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 
 ### Features
 
+- Change to 6-digit passcode
 - Profile selection + PIN numpad login (music-request-v2 style)
 - Add global loading states for Convex mutations
 
