@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Bump pnpm/action-setup to v6 for pnpm v11 compatibility
 - Correct pnpm-workspace.yaml format for v11
 - Auto-redirect to signup if no users
 
@@ -241,6 +242,7 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
