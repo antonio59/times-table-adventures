@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Correct pnpm typo in corepack workflow
 - Use corepack instead of pnpm/action-setup for v11 compatibility
 - Remove --frozen-lockfile for pnpm v11 compatibility
 - Bump pnpm/action-setup to v6 for pnpm v11 compatibility
@@ -244,6 +245,7 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
