@@ -46,14 +46,14 @@ A fun, interactive times table learning app for kids! Built with React 19, TypeS
 - **Styling**: Tailwind CSS 4, shadcn/ui components
 - **Animations**: Framer Motion, canvas-confetti
 - **Backend**: Convex (real-time database)
-- **Package Manager**: Bun
-- **Hosting**: Netlify
+| **Package Manager** | pnpm |
+| **Hosting** | Netlify |
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) (recommended) or Node.js 20+
+- [pnpm](https://pnpm.io/) (recommended) or Node.js 20+
 - [Convex account](https://convex.dev/) (free)
 
 ### Installation
@@ -68,7 +68,7 @@ A fun, interactive times table learning app for kids! Built with React 19, TypeS
 2. **Install dependencies**
 
    ```bash
-   bun install
+   pnpm install
    ```
 
 3. **Set up Convex**
@@ -76,7 +76,7 @@ A fun, interactive times table learning app for kids! Built with React 19, TypeS
    If you're setting up a new Convex project:
 
    ```bash
-   bunx convex dev
+   npx convex dev
    ```
 
    This will prompt you to log in and create a new project.
@@ -91,10 +91,10 @@ A fun, interactive times table learning app for kids! Built with React 19, TypeS
 
    ```bash
    # Terminal 1 - Frontend
-   bun run dev
+   pnpm run dev
 
    # Terminal 2 - Convex backend (for local development)
-   bun run dev:backend
+   pnpm run dev:backend
    ```
 
 5. **Open the app**
@@ -105,12 +105,12 @@ A fun, interactive times table learning app for kids! Built with React 19, TypeS
 
 | Command                 | Description              |
 | ----------------------- | ------------------------ |
-| `bun run dev`           | Run Vite dev server      |
-| `bun run dev:backend`   | Run Convex dev server    |
-| `bun run build`         | Build for production     |
-| `bun run preview`       | Preview production build |
-| `bun run lint`          | Run ESLint               |
-| `bun run convex:deploy` | Deploy Convex functions  |
+| `pnpm run dev`           | Run Vite dev server      |
+| `pnpm run dev:backend`   | Run Convex dev server    |
+| `pnpm run build`         | Build for production     |
+| `pnpm run preview`       | Preview production build |
+| `pnpm run lint`          | Run ESLint               |
+| `pnpm exec convex deploy` | Deploy Convex functions  |
 
 ## Project Structure
 
@@ -210,13 +210,13 @@ The project is configured for Netlify deployment:
 1. **Connect your GitHub repo to Netlify**
 2. **Set environment variables in Netlify**:
    - `VITE_CONVEX_URL` - Your Convex deployment URL
-3. **Build settings are auto-detected** from `netlify.toml`:
-   - Build command: `bun run build`
+   - Build settings are auto-detected from `netlify.toml`:
+   - Build command: `pnpm run build`
    - Publish directory: `dist`
 
 ### GitHub Actions CI/CD
 
-The project includes automated CI/CD workflows using Bun:
+The project includes automated CI/CD workflows using pnpm:
 
 - **CI** (`ci.yml`) - Runs on PRs: linting, type checking, and build
 - **Deploy** (`deploy.yml`) - Runs on push to main: deploys Convex backend and frontend to Netlify
@@ -234,10 +234,10 @@ The project includes automated CI/CD workflows using Bun:
 
 ```bash
 # Deploy Convex backend
-bunx convex deploy
+npx convex deploy
 
 # Build frontend
-bun run build
+pnpm run build
 
 # The dist/ folder can be deployed to any static host
 ```

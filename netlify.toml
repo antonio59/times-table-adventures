@@ -1,10 +1,9 @@
 [build]
-  command = "bun install && bun run build"
+  command = "pnpm install --frozen-lockfile && pnpm run build"
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "20"
-  BUN_VERSION = "1"
+  NODE_VERSION = "22"
 
 # Handle client-side routing for SPA
 [[redirects]]
