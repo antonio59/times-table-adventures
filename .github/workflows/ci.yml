@@ -22,7 +22,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: ppnpm install
 
       - name: Run ESLint
         run: pnpm run lint
@@ -46,7 +46,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: ppnpm install
 
       - name: Build
         run: pnpm run build
