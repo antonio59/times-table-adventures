@@ -75,5 +75,10 @@
     "lightningcss-darwin-x64": "^1.30.2",
     "lightningcss-linux-x64-gnu": "^1.30.2"
   },
-  "packageManager": "pnpm@11.1.1"
+  "packageManager": "pnpm@11.1.1",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
 }
