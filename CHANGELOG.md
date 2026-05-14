@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### CI/CD
 
+- Use pnpm/action-setup@v4 instead of corepack
 - Make SARIF upload non-blocking when Code Scanning is disabled
 - Add OSV Scanner workflow for dependency vulnerability scanning
 - Add automatic changelog workflow
@@ -247,6 +248,7 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
