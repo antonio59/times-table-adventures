@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bug Fixes
 
+- Use pnpm v11 allowBuilds in pnpm-workspace.yaml
 - Move onlyBuiltDependencies to package.json for pnpm v11 CI
 - Pnpm v11 CI, cleanup unused deps, expand tables to 20x
 - Correct pnpm typo in corepack workflow
@@ -248,6 +249,7 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
