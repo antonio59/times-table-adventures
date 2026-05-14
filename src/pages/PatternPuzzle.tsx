@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import { Play, RotateCcw, Check, X, ArrowRight, Sparkles } from "lucide-react";
+import { ALL_TABLES } from "@/lib/constants";
 
 interface Pattern {
   sequence: (number | null)[];
@@ -47,7 +48,7 @@ const PatternPuzzle = () => {
   const [roundsToPlay, setRoundsToPlay] = useState(10);
   const [currentRound, setCurrentRound] = useState(0);
 
-  const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const allTables = ALL_TABLES;
 
   const toggleTable = (table: number) => {
     setSelectedTables((prev) => {

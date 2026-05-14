@@ -5,6 +5,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useSound } from "@/contexts/SoundContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { toast } from "sonner";
+import { ALL_TABLES_WITH_ONE, MULTIPLIER_OPTIONS } from "@/lib/constants";
 import { Check, X, RotateCcw, Sparkles, Save } from "lucide-react";
 
 interface Question {
@@ -13,17 +14,18 @@ interface Question {
   answer: number;
 }
 
-const generateQuestion = (tables: number[]): Question => {
+const generateQuestion = (tables: number[], maxMultiplier: number): Question => {
   const a = tables[Math.floor(Math.random() * tables.length)];
-  const b = Math.floor(Math.random() * 12) + 1;
+  const b = Math.floor(Math.random() * maxMultiplier) + 1;
   return { a, b, answer: a * b };
 };
 
 const Practice = () => {
   const { isLoggedIn, recordGame } = useUser();
   const { play: playSound } = useSound();
-  const allTables = Array.from({ length: 12 }, (_, i) => i + 1);
+  const allTables = ALL_TABLES_WITH_ONE;
   const [selectedTables, setSelectedTables] = useState<number[]>(allTables);
+  const [maxMultiplier, setMaxMultiplier] = useState<number>(12);
   const [question, setQuestion] = useState<Question | null>(null);
   const [userAnswer, setUserAnswer] = useState("");
   const [showResult, setShowResult] = useState<"correct" | "wrong" | null>(
@@ -42,10 +44,10 @@ const Practice = () => {
 
   useEffect(() => {
     if (selectedTables.length > 0) {
-      setQuestion(generateQuestion(selectedTables));
+      setQuestion(generateQuestion(selectedTables, maxMultiplier));
       questionStartTime.current = Date.now();
     }
-  }, [selectedTables]);
+  }, [selectedTables, maxMultiplier]);
 
   const toggleTable = (num: number) => {
     setSelectedTables((prev) =>
@@ -90,7 +92,7 @@ const Practice = () => {
     setTimeout(() => {
       setShowResult(null);
       setUserAnswer("");
-      setQuestion(generateQuestion(selectedTables));
+      setQuestion(generateQuestion(selectedTables, maxMultiplier));
       questionStartTime.current = Date.now();
     }, 1500);
   };
@@ -178,6 +180,22 @@ const Practice = () => {
                 className="w-10 h-10"
               >
                 {num}
+              </Button>
+            ))}
+          </div>
+          <p className="text-sm font-semibold mb-3 mt-4 text-muted-foreground">
+            Max multiplier:
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {MULTIPLIER_OPTIONS.map((num) => (
+              <Button
+                key={num}
+                variant={maxMultiplier === num ? "default" : "game"}
+                size="sm"
+                onClick={() => setMaxMultiplier(num)}
+                className="min-w-[60px]"
+              >
+                1-{num}
               </Button>
             ))}
           </div>

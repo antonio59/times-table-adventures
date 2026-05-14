@@ -1,6 +1,7 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useUser } from "@/contexts/UserContext";
+import { MAX_TABLE } from "@/lib/constants";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Progress as ProgressBar } from "@/components/ui/progress";
@@ -126,7 +127,7 @@ const Progress = () => {
               Tables Mastery
             </h2>
             <span className="text-sm text-muted-foreground">
-              {masteredCount}/12 mastered
+              {masteredCount}/{MAX_TABLE} mastered
             </span>
           </div>
 

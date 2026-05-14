@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Grid3X3, List } from "lucide-react";
+import { ALL_TABLES_WITH_ONE, MAX_TABLE } from "@/lib/constants";
 
 type ViewMode = "grid" | "compact";
 
@@ -10,7 +11,7 @@ const Tables = () => {
   const [selectedTable, setSelectedTable] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
-  const tables = Array.from({ length: 12 }, (_, i) => i + 1);
+  const tables = ALL_TABLES_WITH_ONE;
 
   return (
     <Layout>
@@ -96,7 +97,7 @@ const Tables = () => {
                 </div>
 
                 <div className="space-y-0.5 text-sm">
-                  {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                  {Array.from({ length: MAX_TABLE }, (_, i) => i + 1).map(
                     (multiplier) => (
                       <div
                         key={multiplier}

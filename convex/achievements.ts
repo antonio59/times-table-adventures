@@ -35,7 +35,7 @@ export const ACHIEVEMENTS = {
   },
   all_tables: {
     name: "Multiplication Champion",
-    description: "Master all tables 1-12",
+    description: "Master all tables 1-20",
     emoji: "👑",
   },
   speed_demon: {

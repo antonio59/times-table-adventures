@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { ALL_TABLES } from "@/lib/constants";
 import {
   BookOpen,
   Check,
@@ -901,7 +902,7 @@ const WordProblems = () => {
   const [showHint, setShowHint] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
 
-  const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const allTables = ALL_TABLES;
 
   const toggleTable = (table: number) => {
     setSelectedTables((prev) => {

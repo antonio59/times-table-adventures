@@ -109,9 +109,9 @@ export function generateDailyChallenge(dateStr?: string): DailyChallenge {
 
   // Table ranges based on difficulty
   const minTable = difficulty === "easy" ? 2 : difficulty === "medium" ? 3 : 4;
-  const maxTable = difficulty === "easy" ? 6 : difficulty === "medium" ? 9 : 12;
+  const maxTable = difficulty === "easy" ? 6 : difficulty === "medium" ? 9 : 20;
   const maxMultiplier =
-    difficulty === "easy" ? 6 : difficulty === "medium" ? 10 : 12;
+    difficulty === "easy" ? 6 : difficulty === "medium" ? 10 : 20;
 
   for (let i = 0; i < questionCount; i++) {
     const a = Math.floor(random() * (maxTable - minTable + 1)) + minTable;

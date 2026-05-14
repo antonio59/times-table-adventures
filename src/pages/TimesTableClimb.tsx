@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
+import { ALL_TABLES, DEFAULT_MULTIPLIER_MAX } from "@/lib/constants";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { toast } from "sonner";
 import {
@@ -22,8 +23,8 @@ interface Level {
 
 const generateLevels = (table: number): Level[] => {
   const levels: Level[] = [];
-  // Shuffle multipliers 1-12 for variety
-  const multipliers = Array.from({ length: 12 }, (_, i) => i + 1).sort(
+  // Shuffle multipliers 1-DEFAULT_MULTIPLIER_MAX for variety
+  const multipliers = Array.from({ length: DEFAULT_MULTIPLIER_MAX }, (_, i) => i + 1).sort(
     () => Math.random() - 0.5,
   );
 
@@ -56,7 +57,7 @@ const TimesTableClimb = () => {
   const gameStartTime = useRef<number>(Date.now());
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const allTables = ALL_TABLES;
 
   const handleWrongAnswer = useCallback(() => {
     const timeMs = Date.now() - levelStartTime.current;
@@ -197,7 +198,7 @@ const TimesTableClimb = () => {
     tableResults,
   ]);
 
-  const heightPercentage = (currentLevel / 12) * 100;
+  const heightPercentage = (currentLevel / DEFAULT_MULTIPLIER_MAX) * 100;
 
   return (
     <Layout>
@@ -210,7 +211,7 @@ const TimesTableClimb = () => {
                 Times Table Climb
               </h1>
               <p className="text-muted-foreground">
-                Climb to the top by answering all 12 questions correctly! But be
+                Climb to the top by answering all {DEFAULT_MULTIPLIER_MAX} questions correctly! But be
                 careful - {maxMistakes} mistakes and you fall!
               </p>
             </div>
@@ -332,7 +333,7 @@ const TimesTableClimb = () => {
               <div className="w-32 flex flex-col gap-2">
                 <div className="bg-card rounded-xl p-3 text-center border border-border">
                   <p className="text-xs text-muted-foreground">Level</p>
-                  <p className="text-2xl font-bold">{currentLevel + 1}/12</p>
+                  <p className="text-2xl font-bold">{currentLevel + 1}/{DEFAULT_MULTIPLIER_MAX}</p>
                 </div>
                 <div
                   className={`bg-card rounded-xl p-3 text-center border border-border ${timeLeft <= 3 ? "animate-pulse bg-destructive/10" : ""}`}
@@ -462,12 +463,12 @@ const TimesTableClimb = () => {
               <div className="text-6xl mb-4">😢</div>
               <h1 className="text-3xl font-extrabold mb-2">You Slipped!</h1>
               <p className="text-xl text-muted-foreground mb-4">
-                You reached level {currentLevel + 1} of 12
+                You reached level {currentLevel + 1} of {DEFAULT_MULTIPLIER_MAX}
               </p>
 
               <div className="bg-muted/50 rounded-xl p-4 mb-6">
                 <p className="text-lg font-bold">
-                  You got {currentLevel} out of 12 correct!
+                  You got {currentLevel} out of {DEFAULT_MULTIPLIER_MAX} correct!
                 </p>
                 <p className="text-sm text-muted-foreground mt-2">
                   Don't give up! Practice makes perfect! 💪

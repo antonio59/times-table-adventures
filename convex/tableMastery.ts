@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { MAX_TABLE } from "./constants";
 
 // Update mastery for a specific times table
 export const updateMastery = mutation({
@@ -107,7 +108,7 @@ export const getUserMastery = query({
       .withIndex("by_user", (q) => q.eq("userId", args.userId))
       .collect();
 
-    // Create a map for all tables 1-12
+    // Create a map for all tables 1-MAX_TABLE
     const masteryMap: Record<
       number,
       {
@@ -121,7 +122,7 @@ export const getUserMastery = query({
       }
     > = {};
 
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= MAX_TABLE; i++) {
       const tableMastery = mastery.find((m) => m.tableNumber === i);
       if (tableMastery) {
         const accuracy =
@@ -181,8 +182,8 @@ export const getSuggestedTables = query({
     // Find tables that need work
     const needsPractice: { tableNumber: number; reason: string }[] = [];
 
-    // Check all tables 1-12
-    for (let i = 1; i <= 12; i++) {
+    // Check all tables 1-MAX_TABLE
+    for (let i = 1; i <= MAX_TABLE; i++) {
       const tableMastery = mastery.find((m) => m.tableNumber === i);
 
       if (!tableMastery || tableMastery.totalAttempts < 5) {

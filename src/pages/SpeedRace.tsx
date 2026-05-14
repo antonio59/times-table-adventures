@@ -5,6 +5,7 @@ import { useUser } from "@/contexts/UserContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { toast } from "sonner";
 import { Zap, Play, Trophy, RotateCcw } from "lucide-react";
+import { ALL_TABLES } from "@/lib/constants";
 
 const SpeedRace = () => {
   const { isLoggedIn, recordGame } = useUser();
@@ -27,7 +28,7 @@ const SpeedRace = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const questionStartTime = useRef<number>(Date.now());
 
-  const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const allTables = ALL_TABLES;
 
   const toggleTable = (table: number) => {
     setSelectedTables((prev) => {

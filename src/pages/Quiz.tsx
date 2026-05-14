@@ -7,6 +7,7 @@ import { useSound } from "@/contexts/SoundContext";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { WrongAnswerHelp } from "@/components/WrongAnswerHelp";
+import { ALL_TABLES } from "@/lib/constants";
 import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
 import {
   StreakFire,
@@ -39,9 +40,9 @@ interface Question {
   options: number[];
 }
 
-const generateQuestion = (selectedTables: number[]): Question => {
+const generateQuestion = (selectedTables: number[], maxMultiplier: number): Question => {
   const a = selectedTables[Math.floor(Math.random() * selectedTables.length)];
-  const b = Math.floor(Math.random() * 12) + 1;
+  const b = Math.floor(Math.random() * maxMultiplier) + 1;
   const answer = a * b;
 
   // Generate wrong options that are more realistic
@@ -100,6 +101,7 @@ const Quiz = () => {
   const [selectedTables, setSelectedTables] = useState<number[]>([2]);
   const [timePerQuestion, setTimePerQuestion] = useState<number>(10);
   const [questionCount, setQuestionCount] = useState<number>(10);
+  const [maxMultiplier, setMaxMultiplier] = useState<number>(12);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
   const [tableResults, setTableResults] = useState<
@@ -204,7 +206,7 @@ const Quiz = () => {
     enabled: true,
   });
 
-  const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const allTables = ALL_TABLES;
 
   const toggleTable = (table: number) => {
     setSelectedTables((prev) => {
@@ -224,7 +226,7 @@ const Quiz = () => {
   const startGame = useCallback(() => {
     playSound("gameStart");
     const newQuestions = Array.from({ length: questionCount }, () =>
-      generateQuestion(selectedTables),
+      generateQuestion(selectedTables, maxMultiplier),
     );
     setQuestions(newQuestions);
     setCurrentIndex(0);
@@ -240,7 +242,7 @@ const Quiz = () => {
     gameStartTime.current = Date.now();
     questionStartTime.current = Date.now();
     setGameState("playing");
-  }, [selectedTables, timePerQuestion, questionCount, playSound]);
+  }, [selectedTables, timePerQuestion, questionCount, maxMultiplier, playSound]);
 
   useEffect(() => {
     if (gameState !== "playing" || selectedAnswer !== null) return;
@@ -439,7 +441,7 @@ const Quiz = () => {
                 <p className="w-full text-xs text-muted-foreground mb-1">
                   Quick select up to:
                 </p>
-                {[2, 3, 4, 5, 6, 10, 12].map((table) => (
+                {[2, 3, 4, 5, 6, 10, 12, 15, 20].map((table) => (
                   <Button
                     key={table}
                     variant="outline"
@@ -448,6 +450,23 @@ const Quiz = () => {
                     className="text-xs min-h-[36px] px-2 sm:px-3"
                   >
                     Up to {table}×
+                  </Button>
+                ))}
+              </div>
+
+              <h2 className="text-base sm:text-lg font-bold mb-2">
+                Max multiplier
+              </h2>
+              <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
+                {([12, 20, 50, 100] as const).map((num) => (
+                  <Button
+                    key={num}
+                    variant={maxMultiplier === num ? "default" : "game"}
+                    size="sm"
+                    onClick={() => setMaxMultiplier(num)}
+                    className="min-w-[60px]"
+                  >
+                    1-{num}
                   </Button>
                 ))}
               </div>

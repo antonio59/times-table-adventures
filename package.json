@@ -17,8 +17,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "convex:deploy": "convex deploy",
-    "postinstall": "node scripts/install-native-deps.js || true"
+    "convex:deploy": "convex deploy"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.2.7",
@@ -26,7 +25,6 @@
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-progress": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
-    "@radix-ui/react-toast": "^1.2.15",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tanstack/react-query": "^5.90.12",
     "canvas-confetti": "^1.9.4",

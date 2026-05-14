@@ -21,6 +21,7 @@ import {
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
 import { UserMenu } from "@/components/UserMenu";
+import { MAX_TABLE, DEFAULT_MULTIPLIER_MAX } from "@/lib/constants";
 
 const FeatureCard = ({
   icon: Icon,
@@ -329,7 +330,7 @@ const Index = () => {
             <FeatureCard
               icon={Calculator}
               title="Times Tables"
-              description="All tables 1-12 reference"
+              description={`All tables 1-${MAX_TABLE} reference`}
               to="/tables"
               variant="default"
               delay="0s"
@@ -359,7 +360,7 @@ const Index = () => {
             <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
               <div>
                 <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  12
+                  {MAX_TABLE}
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground">
                   Tables
@@ -367,7 +368,7 @@ const Index = () => {
               </div>
               <div>
                 <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-secondary to-secondary/70 bg-clip-text text-transparent">
-                  144
+                  {MAX_TABLE * DEFAULT_MULTIPLIER_MAX}
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground">
                   Facts

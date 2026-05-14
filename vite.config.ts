@@ -26,11 +26,8 @@ export default defineConfig({
             "@radix-ui/react-dropdown-menu",
             "@radix-ui/react-progress",
             "@radix-ui/react-slot",
-            "@radix-ui/react-toast",
             "@radix-ui/react-tooltip",
           ],
-          // Convex client
-          "vendor-convex": ["convex"],
           // Utilities
           "vendor-utils": [
             "class-variance-authority",

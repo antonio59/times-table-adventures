@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
 import { Printer, FileText, Shuffle } from "lucide-react";
+import { ALL_TABLES_WITH_ONE, MULTIPLIER_OPTIONS } from "@/lib/constants";
 
 type WorksheetType = "table" | "random" | "fill-blank";
 
@@ -9,40 +10,42 @@ const Print = () => {
   const [selectedTable, setSelectedTable] = useState(2);
   const [worksheetType, setWorksheetType] = useState<WorksheetType>("table");
   const [showAnswers, setShowAnswers] = useState(false);
+  const [maxMultiplier, setMaxMultiplier] = useState(12);
   const printRef = useRef<HTMLDivElement>(null);
 
-  const tables = Array.from({ length: 12 }, (_, i) => i + 1);
+  const tables = ALL_TABLES_WITH_ONE;
 
-  const generateRandomProblems = () => {
+  const generateRandomProblems = (max: number) => {
     const problems = [];
     for (let i = 0; i < 20; i++) {
-      const a = Math.floor(Math.random() * 12) + 1;
-      const b = Math.floor(Math.random() * 12) + 1;
+      const a = Math.floor(Math.random() * max) + 1;
+      const b = Math.floor(Math.random() * max) + 1;
       problems.push({ a, b, answer: a * b });
     }
     return problems;
   };
 
-  const generateFillBlank = () => {
+  const generateFillBlank = (max: number) => {
     const problems = [];
     for (let i = 0; i < 20; i++) {
-      const a = Math.floor(Math.random() * 12) + 1;
-      const b = Math.floor(Math.random() * 12) + 1;
+      const a = Math.floor(Math.random() * max) + 1;
+      const b = Math.floor(Math.random() * max) + 1;
       const blankPosition = Math.floor(Math.random() * 3); // 0: first, 1: second, 2: answer
       problems.push({ a, b, answer: a * b, blankPosition });
     }
     return problems;
   };
 
-  const [randomProblems] = useState(generateRandomProblems);
-  const [fillBlankProblems] = useState(generateFillBlank);
+  const [randomProblems, setRandomProblems] = useState(() => generateRandomProblems(12));
+  const [fillBlankProblems, setFillBlankProblems] = useState(() => generateFillBlank(12));
 
   const handlePrint = () => {
     window.print();
   };
 
   const regenerateProblems = () => {
-    window.location.reload();
+    setRandomProblems(generateRandomProblems(maxMultiplier));
+    setFillBlankProblems(generateFillBlank(maxMultiplier));
   };
 
   return (
@@ -113,6 +116,27 @@ const Print = () => {
             )}
 
             <div>
+              <label className="block text-sm font-semibold mb-2">Max Multiplier</label>
+              <div className="flex flex-wrap gap-1">
+                {MULTIPLIER_OPTIONS.map((num) => (
+                  <Button
+                    key={num}
+                    variant={maxMultiplier === num ? "secondary" : "game"}
+                    size="sm"
+                    className="min-w-[50px]"
+                    onClick={() => {
+                      setMaxMultiplier(num);
+                      setRandomProblems(generateRandomProblems(num));
+                      setFillBlankProblems(generateFillBlank(num));
+                    }}
+                  >
+                    1-{num}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            <div>
               <label className="block text-sm font-semibold mb-2">Options</label>
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -158,7 +182,7 @@ const Print = () => {
 
           {worksheetType === "table" && (
             <div className="grid grid-cols-2 gap-4">
-              {Array.from({ length: 12 }, (_, i) => i + 1).map((multiplier) => (
+              {Array.from({ length: maxMultiplier }, (_, i) => i + 1).map((multiplier) => (
                 <div
                   key={multiplier}
                   className="flex items-center justify-between py-2 px-4 border-b border-border"

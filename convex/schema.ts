@@ -43,7 +43,7 @@ export default defineSchema({
   // Table mastery - tracks proficiency per times table
   tableMastery: defineTable({
     userId: v.id("users"),
-    tableNumber: v.number(), // 1-12
+    tableNumber: v.number(), // 1-20
     totalAttempts: v.number(),
     correctAttempts: v.number(),
     averageTimeMs: v.number(), // average time to answer

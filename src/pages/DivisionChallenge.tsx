@@ -4,6 +4,7 @@ import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { toast } from "sonner";
+import { ALL_TABLES } from "@/lib/constants";
 import {
   Play,
   Trophy,
@@ -83,7 +84,7 @@ const DivisionChallenge = () => {
   const questionStartTime = useRef<number>(Date.now());
   const gameStartTime = useRef<number>(Date.now());
 
-  const allTables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const allTables = ALL_TABLES;
 
   const toggleTable = (table: number) => {
     setSelectedTables((prev) => {
