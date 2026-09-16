@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useUser } from "@/contexts/UserContext";
 import { useSound } from "@/contexts/SoundContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
@@ -290,17 +291,10 @@ const NumberBonds = () => {
       <div className="max-w-2xl mx-auto">
         {gameState === "idle" && (
           <div className="text-center">
-            <div className="mb-6 sm:mb-8">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl gradient-primary flex items-center justify-center">
-                <Link2 className="w-8 h-8 sm:w-10 sm:h-10 text-primary-foreground" />
-              </div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2">
-                Number Bonds
-              </h1>
-              <p className="text-muted-foreground text-sm sm:text-base">
-                Find the factors that multiply to make the product!
-              </p>
-            </div>
+            <GameHeader
+              gameType="bonds"
+              subtitle="Find the factors that multiply to make the product!"
+            />
 
             <div className="bg-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-card border border-border mb-6">
               <h2 className="text-lg sm:text-xl font-bold mb-2">

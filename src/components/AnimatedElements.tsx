@@ -194,7 +194,7 @@ export const FloatingEmoji = ({
 export const AnimatedScore = ({ score }: { score: number }) => (
   <motion.span
     key={score}
-    initial={{ scale: 1.5, color: "#22c55e" }}
+    initial={{ scale: 1.5, color: "hsl(var(--success))" }}
     animate={{ scale: 1, color: "inherit" }}
     transition={{ duration: 0.3 }}
   >
@@ -210,7 +210,7 @@ export const StreakFire = ({ streak }: { streak: number }) => {
     <motion.div
       initial={{ scale: 0, rotate: -10 }}
       animate={{ scale: 1, rotate: 0 }}
-      className="inline-flex items-center gap-1 bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-sm font-bold"
+      className="inline-flex items-center gap-1 bg-gradient-to-r from-secondary to-destructive text-secondary-foreground px-3 py-1 rounded-full text-sm font-bold"
     >
       <motion.span
         animate={{ y: [0, -3, 0] }}

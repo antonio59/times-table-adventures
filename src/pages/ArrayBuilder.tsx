@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useUser } from "@/contexts/UserContext";
 import { useSound } from "@/contexts/SoundContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
@@ -281,13 +282,10 @@ const ArrayBuilder = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center"
           >
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-              🧱 Array Builder
-            </h1>
-            <p className="text-muted-foreground mb-8">
-              See multiplication as groups and rows - count the array or match
-              the equation!
-            </p>
+            <GameHeader
+              gameType="array"
+              subtitle="See multiplication as groups and rows - count the array or match the equation!"
+            />
 
             <div className="bg-card rounded-3xl p-6 shadow-card border border-border space-y-6">
               <div>

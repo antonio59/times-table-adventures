@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useUser } from "@/contexts/UserContext";
 import { useSound } from "@/contexts/SoundContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
@@ -32,7 +34,11 @@ const Practice = () => {
   const { isLoggedIn, recordGame } = useUser();
   const { play: playSound } = useSound();
   const allTables = ALL_TABLES_WITH_ONE;
-  const [selectedTables, setSelectedTables] = useState<number[]>(allTables);
+  const [searchParams] = useSearchParams();
+  const [selectedTables, setSelectedTables] = useState<number[]>(() => {
+    const tableParam = Number(searchParams.get("table"));
+    return allTables.includes(tableParam) ? [tableParam] : allTables;
+  });
   const [maxMultiplier, setMaxMultiplier] = useState<number>(12);
   const [question, setQuestion] = useState<Question | null>(null);
   const [userAnswer, setUserAnswer] = useState("");
@@ -188,14 +194,10 @@ const Practice = () => {
   return (
     <Layout>
       <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-            ⭐ Practice Mode
-          </h1>
-          <p className="text-muted-foreground">
-            Select the tables you want to practice!
-          </p>
-        </div>
+        <GameHeader
+          gameType="practice"
+          subtitle="Select the tables you want to practice!"
+        />
 
         <div className="bg-card rounded-2xl p-4 shadow-card border border-border mb-6">
           <p className="text-sm font-semibold mb-3 text-muted-foreground">

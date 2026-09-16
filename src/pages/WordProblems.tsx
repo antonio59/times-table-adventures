@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { ALL_TABLES } from "@/lib/constants";
 import {
   BookOpen,
@@ -959,14 +960,10 @@ const WordProblems = () => {
       <div className="max-w-2xl mx-auto">
         {!problem ? (
           <div className="text-center">
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-                📖 Word Problems
-              </h1>
-              <p className="text-muted-foreground">
-                Practice multiplication with fun story problems!
-              </p>
-            </div>
+            <GameHeader
+              gameType="stories"
+              subtitle="Practice multiplication with fun story problems!"
+            />
 
             <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
               <h2 className="text-xl font-bold mb-2">

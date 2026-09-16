@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { Play, RotateCcw, Check, X, ArrowRight, Sparkles } from "lucide-react";
 import { ALL_TABLES } from "@/lib/constants";
 
@@ -114,16 +115,10 @@ const PatternPuzzle = () => {
       <div className="max-w-2xl mx-auto">
         {gameState === "idle" && (
           <div className="text-center">
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-                <Sparkles className="inline w-8 h-8 mr-2" />
-                Pattern Puzzle
-              </h1>
-              <p className="text-muted-foreground">
-                Find the missing number in the sequence! Spot the pattern and
-                fill in the blank.
-              </p>
-            </div>
+            <GameHeader
+              gameType="pattern"
+              subtitle="Find the missing number in the sequence! Spot the pattern and fill in the blank."
+            />
 
             <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
               <h2 className="text-xl font-bold mb-2">Choose your tables</h2>

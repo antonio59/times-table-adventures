@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/UserMenu";
 import { SoundToggle } from "@/components/SoundToggle";
+import { Mascot } from "@/components/trail/Mascot";
 import { Calculator, Gamepad2, Home, Lightbulb, Trophy } from "lucide-react";
 
 const Header = () => {
@@ -43,12 +44,13 @@ const Header = () => {
             to="/"
             className="flex items-center gap-1.5 sm:gap-2 group shrink-0"
           >
-            <span className="text-2xl sm:text-3xl animate-bounce-gentle">
-              ✨
-            </span>
-            <h1 className="text-base sm:text-xl md:text-2xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap">
-              <span className="hidden xs:inline">Times Table Fun!</span>
-              <span className="xs:hidden">TTF!</span>
+            <Mascot
+              className="w-8 h-8 sm:w-9 sm:h-9"
+              animated={false}
+            />
+            <h1 className="text-base sm:text-xl md:text-2xl font-bold font-display bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap">
+              <span className="hidden sm:inline">Times Tables Fun</span>
+              <span className="sm:hidden">TTF!</span>
             </h1>
           </Link>
 

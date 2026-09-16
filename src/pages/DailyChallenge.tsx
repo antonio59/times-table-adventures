@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useSound } from "@/contexts/SoundContext";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
@@ -195,22 +196,10 @@ const DailyChallenge = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center"
           >
-            <div className="mb-6">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-                className="text-6xl mb-4"
-              >
-                <Calendar className="w-16 h-16 mx-auto text-primary" />
-              </motion.div>
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-                Daily Challenge
-              </h1>
-              <p className="text-muted-foreground">
-                A new challenge every day! Come back tomorrow for more.
-              </p>
-            </div>
+            <GameHeader
+              gameType="daily"
+              subtitle="A new challenge every day! Come back tomorrow for more."
+            />
 
             {/* Stats Cards */}
             <div className="grid grid-cols-3 gap-3 mb-6">

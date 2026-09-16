@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useUser } from "@/contexts/UserContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { toast } from "sonner";
@@ -201,14 +202,10 @@ const MissingNumber = () => {
       <div className="max-w-2xl mx-auto">
         {!started ? (
           <div className="text-center">
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-                🔍 Missing Number
-              </h1>
-              <p className="text-muted-foreground">
-                Find the missing number in each equation!
-              </p>
-            </div>
+            <GameHeader
+              gameType="missing"
+              subtitle="Find the missing number in each equation!"
+            />
 
             <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
               <h2 className="text-xl font-bold mb-2">

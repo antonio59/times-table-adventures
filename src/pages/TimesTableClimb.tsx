@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useUser } from "@/contexts/UserContext";
 import { ALL_TABLES, DEFAULT_MULTIPLIER_MAX } from "@/lib/constants";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
@@ -205,16 +206,16 @@ const TimesTableClimb = () => {
       <div className="max-w-2xl mx-auto">
         {gameState === "idle" && (
           <div className="text-center">
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-                <Mountain className="inline w-8 h-8 mr-2" />
-                Times Table Climb
-              </h1>
-              <p className="text-muted-foreground">
-                Climb to the top by answering all {DEFAULT_MULTIPLIER_MAX} questions correctly! But be
-                careful - {maxMistakes} mistakes and you fall!
-              </p>
-            </div>
+            <GameHeader
+              gameType="climb"
+              subtitle={
+                <>
+                  Climb to the top by answering all {DEFAULT_MULTIPLIER_MAX}{" "}
+                  questions correctly! But be careful - {maxMistakes} mistakes
+                  and you fall!
+                </>
+              }
+            />
 
             <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
               <h2 className="text-xl font-bold mb-4">Choose your mountain</h2>

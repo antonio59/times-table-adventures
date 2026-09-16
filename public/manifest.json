@@ -1,6 +1,6 @@
 {
-  "name": "Times Table Adventures",
-  "short_name": "Times Tables",
+  "name": "Times Tables Fun",
+  "short_name": "TTF",
   "description": "Fun and interactive times table learning app for kids",
   "start_url": "/",
   "display": "standalone",

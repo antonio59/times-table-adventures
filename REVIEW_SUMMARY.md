@@ -1,4 +1,4 @@
-# Times Table Adventures - Code Review & Improvements
+# Times Tables Fun - Code Review & Improvements
 
 ## Summary of Changes
 

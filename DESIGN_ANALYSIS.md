@@ -1,4 +1,4 @@
-# Design Analysis — Times Table Adventures
+# Design Analysis — Times Tables Fun
 
 **Date:** 2026-04-25  
 **Version analyzed:** 1.3.0  
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-Times Table Adventures has a **strong, cohesive visual identity** with a well-defined color palette, friendly typography, and delightful motion design. The app successfully creates a playful, encouraging atmosphere appropriate for its target audience (children 6–11). However, several **consistency gaps**, **accessibility issues**, and **design-token drift** have emerged as the codebase has grown to 12+ games. Addressing these will improve maintainability, accessibility, and visual polish.
+Times Tables Fun has a **strong, cohesive visual identity** with a well-defined color palette, friendly typography, and delightful motion design. The app successfully creates a playful, encouraging atmosphere appropriate for its target audience (children 6–11). However, several **consistency gaps**, **accessibility issues**, and **design-token drift** have emerged as the codebase has grown to 12+ games. Addressing these will improve maintainability, accessibility, and visual polish.
 
 **Overall Score: 7.5/10**
 - Visual Identity: 8/10
@@ -422,7 +422,7 @@ Framer Motion props are defined inline throughout components. While `AnimatedEle
 
 ## Conclusion
 
-Times Table Adventures has a **delightful, well-conceived design system** that genuinely serves its audience. The core issues are **consistency gaps** that emerged as the app scaled from a few games to twelve, and **accessibility oversights** that are common in visually-driven projects.
+Times Tables Fun has a **delightful, well-conceived design system** that genuinely serves its audience. The core issues are **consistency gaps** that emerged as the app scaled from a few games to twelve, and **accessibility oversights** that are common in visually-driven projects.
 
 With the newly created `DESIGN.md` as a source of truth and the prioritized fixes above, the app can achieve a **9/10 design score** while remaining maintainable as new features are added.
 

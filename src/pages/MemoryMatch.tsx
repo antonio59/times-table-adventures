@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useUser } from "@/contexts/UserContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { toast } from "sonner";
@@ -205,14 +206,10 @@ const MemoryMatch = () => {
       <div className="max-w-2xl mx-auto">
         {gameState === "idle" && (
           <div className="text-center">
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-                🃏 Memory Match
-              </h1>
-              <p className="text-muted-foreground">
-                Match equations with their answers!
-              </p>
-            </div>
+            <GameHeader
+              gameType="memory"
+              subtitle="Match equations with their answers!"
+            />
 
             <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
               <h2 className="text-xl font-bold mb-2">Choose up to 3 tables</h2>

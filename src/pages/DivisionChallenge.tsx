@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useUser } from "@/contexts/UserContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
 import { toast } from "sonner";
@@ -262,16 +263,10 @@ const DivisionChallenge = () => {
       <div className="max-w-2xl mx-auto">
         {gameState === "idle" && (
           <div className="text-center">
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-                <Divide className="inline w-8 h-8 mr-2" />
-                Division Challenge
-              </h1>
-              <p className="text-muted-foreground">
-                Use your times tables knowledge backwards! If you know 3 × 4 =
-                12, then 12 ÷ 4 = 3
-              </p>
-            </div>
+            <GameHeader
+              gameType="division"
+              subtitle="Use your times tables knowledge backwards! If you know 3 × 4 = 12, then 12 ÷ 4 = 3"
+            />
 
             <div className="bg-card rounded-3xl p-6 md:p-8 shadow-card border border-border mb-6">
               <h2 className="text-xl font-bold mb-2">

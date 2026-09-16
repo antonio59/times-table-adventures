@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useUser } from "@/contexts/UserContext";
 import { useSound } from "@/contexts/SoundContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
@@ -245,13 +246,10 @@ const FactFamily = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center"
           >
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-              🏠 Fact Family
-            </h1>
-            <p className="text-muted-foreground mb-8">
-              One family, four facts! If 3 × 4 = 12, then 4 × 3 = 12,
-              12 ÷ 3 = 4 and 12 ÷ 4 = 3. Complete the family!
-            </p>
+            <GameHeader
+              gameType="family"
+              subtitle="One family, four facts! If 3 × 4 = 12, then 4 × 3 = 12, 12 ÷ 3 = 4 and 12 ÷ 4 = 3. Complete the family!"
+            />
 
             <div className="bg-card rounded-3xl p-6 shadow-card border border-border space-y-6">
               <div>

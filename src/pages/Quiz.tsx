@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import { GameHeader } from "@/components/trail/GameHeader";
 import { useUser } from "@/contexts/UserContext";
 import { useSound } from "@/contexts/SoundContext";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
@@ -401,14 +402,10 @@ const Quiz = () => {
       <div className="max-w-2xl mx-auto">
         {gameState === "idle" && (
           <div className="text-center">
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-                🎮 Quiz Challenge
-              </h1>
-              <p className="text-muted-foreground">
-                Select the times tables you've learned, then test yourself!
-              </p>
-            </div>
+            <GameHeader
+              gameType="quiz"
+              subtitle="Select the times tables you've learned, then test yourself!"
+            />
 
             <div className="bg-card rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-card border border-border mb-6">
               <h2 className="text-lg sm:text-xl font-bold mb-2">

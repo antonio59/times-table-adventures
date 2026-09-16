@@ -1,6 +1,6 @@
 ---
 version: alpha
-name: Times Table Adventures
+name: Times Tables Fun
 description: A playful, kid-friendly design system for an interactive multiplication learning app. Built to feel like a game while maintaining educational clarity.
 colors:
   primary: "#2EC4B6"
@@ -188,11 +188,11 @@ components:
     shadow: "0 8px 30px -8px rgba(36,43,56,0.12)"
 ---
 
-# Times Table Adventures — Design System
+# Times Tables Fun — Design System
 
 ## Overview
 
-Times Table Adventures is a **playful, encouraging, and game-like** multiplication learning app designed for children aged 6–11. The design philosophy centers on **"learning through delight"** — every interaction should feel rewarding, every mistake should feel like an opportunity, and every success should be celebrated.
+Times Tables Fun is a **playful, encouraging, and game-like** multiplication learning app designed for children aged 6–11. The design philosophy centers on **"learning through delight"** — every interaction should feel rewarding, every mistake should feel like an opportunity, and every success should be celebrated.
 
 The visual identity combines **warm, approachable colors** with **energetic motion** to create a space that feels safe, fun, and distinctly non-school-like. Unlike typical educational apps that feel clinical or overly gamified, this system uses soft gradients, bouncy animations, and friendly typography to make math feel like an adventure.
 

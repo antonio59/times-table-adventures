@@ -15,14 +15,15 @@ import {
   Award,
   TrendingUp,
   Gamepad2,
-  Lock,
 } from "lucide-react";
+import { Mascot } from "@/components/trail/Mascot";
+import { TRAIL_STOPS, starsForAccuracy } from "@/lib/trail";
 
 const MASTERY_COLORS = {
   beginner: "bg-muted text-muted-foreground",
-  learning: "bg-blue-100 text-blue-700 border-blue-300",
-  practicing: "bg-amber-100 text-amber-700 border-amber-300",
-  mastered: "bg-green-100 text-green-700 border-green-300",
+  learning: "bg-info/10 text-info border-info/30",
+  practicing: "bg-secondary/10 text-secondary border-secondary/30",
+  mastered: "bg-success/10 text-success border-success/30",
 };
 
 const MASTERY_LABELS = {
@@ -61,14 +62,16 @@ const Progress = () => {
       <Layout>
         <div className="max-w-2xl mx-auto text-center">
           <div className="bg-card rounded-3xl p-8 shadow-card border border-border">
-            <Lock className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-            <h1 className="text-2xl font-bold mb-2">Track Your Progress</h1>
+            <Mascot className="w-24 h-24 mx-auto mb-3" />
+            <h1 className="text-2xl font-bold font-display mb-2">
+              Track Your Progress
+            </h1>
             <p className="text-muted-foreground mb-6">
-              Enter your name in the header to start tracking your learning
-              journey!
+              Create a profile from the header and the trail will remember
+              every star you earn!
             </p>
             <Link to="/">
-              <Button size="lg">Go Home</Button>
+              <Button size="lg">Back to the Trail</Button>
             </Link>
           </div>
         </div>
@@ -85,11 +88,19 @@ const Progress = () => {
     <Layout>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">
-            {userName}'s Progress
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 capitalize">
+            {userName}&apos;s Journey
           </h1>
-          <p className="text-muted-foreground">
-            Track your times table journey!
+          <p className="text-muted-foreground inline-flex items-center gap-2">
+            <Star
+              className="w-4 h-4 fill-warning text-warning"
+              aria-hidden="true"
+            />
+            {TRAIL_STOPS.reduce((sum, stop) => {
+              const p = stats?.gameBreakdown?.[stop.gameType];
+              return sum + (p && p.sessions > 0 ? starsForAccuracy(p.accuracy) : 0);
+            }, 0)}
+            /{TRAIL_STOPS.length * 3} trail stars earned
           </p>
         </div>
 
@@ -101,7 +112,7 @@ const Progress = () => {
             <p className="text-xs text-muted-foreground">Accuracy</p>
           </div>
           <div className="bg-card rounded-2xl p-4 shadow-card border border-border text-center">
-            <Flame className="w-8 h-8 mx-auto mb-2 text-orange-500" />
+            <Flame className="w-8 h-8 mx-auto mb-2 text-secondary" />
             <div className="text-2xl font-bold">{stats?.bestStreak ?? 0}</div>
             <p className="text-xs text-muted-foreground">Best Streak</p>
           </div>
@@ -113,7 +124,7 @@ const Progress = () => {
             <p className="text-xs text-muted-foreground">Games Played</p>
           </div>
           <div className="bg-card rounded-2xl p-4 shadow-card border border-border text-center">
-            <Star className="w-8 h-8 mx-auto mb-2 text-yellow-500" />
+            <Star className="w-8 h-8 mx-auto mb-2 text-warning" />
             <div className="text-2xl font-bold">{stats?.totalCorrect ?? 0}</div>
             <p className="text-xs text-muted-foreground">Correct Answers</p>
           </div>
@@ -229,17 +240,25 @@ const Progress = () => {
                   className="flex items-center justify-between p-3 bg-muted/30 rounded-xl"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="text-2xl">
-                      {session.gameType === "quiz" && "🎮"}
-                      {session.gameType === "practice" && "⭐"}
-                      {session.gameType === "speed" && "⚡"}
-                      {session.gameType === "memory" && "🧠"}
-                      {session.gameType === "missing" && "🔢"}
-                      {session.gameType === "stories" && "📖"}
-                    </div>
+                    {(() => {
+                      const stop = TRAIL_STOPS.find(
+                        (s) => s.gameType === session.gameType,
+                      );
+                      const SessionIcon = stop?.icon ?? Gamepad2;
+                      return (
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                          <SessionIcon
+                            className="w-5 h-5 text-primary"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      );
+                    })()}
                     <div>
-                      <div className="font-semibold capitalize">
-                        {session.gameType}
+                      <div className="font-semibold">
+                        {TRAIL_STOPS.find(
+                          (s) => s.gameType === session.gameType,
+                        )?.title ?? session.gameType}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         {new Date(session.completedAt).toLocaleDateString()}

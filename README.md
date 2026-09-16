@@ -1,4 +1,4 @@
-# Times Table Adventures
+# Times Tables Fun
 
 A fun, interactive times table learning app for kids! Built with React 19, TypeScript, and Convex for progress tracking.
 
