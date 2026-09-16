@@ -260,6 +260,7 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
+- Update changelog [skip ci]
 - Update npm references to pnpm
 - Update changelog [skip ci]
 - Update changelog [skip ci]
@@ -273,6 +274,8 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 
 ### Features
 
+- Adventure trail redesign, rename to Times Tables Fun, Nova branding
+- Migrate to Cloudflare Workers, harden auth, add games + explanations
 - Change to 6-digit passcode
 - Profile selection + PIN numpad login (music-request-v2 style)
 - Add global loading states for Convex mutations
