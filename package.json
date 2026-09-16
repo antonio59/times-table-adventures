@@ -37,7 +37,7 @@
     "next-themes": "^0.4.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-router-dom": "^7.11.0",
+    "react-router-dom": "^7.18.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0"
   },
@@ -53,11 +53,11 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.26",
     "globals": "^16.5.0",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.28",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.1",
-    "vite": "^6.3.5",
+    "vite": "^6.4.3",
     "wrangler": "^4.131.2"
   },
   "optionalDependencies": {
