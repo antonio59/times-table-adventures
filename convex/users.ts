@@ -1,15 +1,23 @@
 import { v } from "convex/values";
 import {
+  internalMutation,
+  internalQuery,
   mutation,
   query,
   type MutationCtx,
   type QueryCtx,
 } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { Doc } from "./_generated/dataModel";
 
 const PIN_REGEX = /^\d{6}$/;
 const MAX_FAILED_ATTEMPTS = 8;
 const ATTEMPT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const MAX_PENDING_SIGNUPS = 25; // bounds approval-email spam
+
+function userStatus(user: Doc<"users">): "pending" | "approved" | "rejected" {
+  return user.status ?? "approved"; // accounts predating approval are approved
+}
 
 // SHA-256 hash of the passcode (never store plaintext)
 async function hashPin(pin: string): Promise<string> {
@@ -95,7 +103,7 @@ export const checkUserExists = query({
   },
 });
 
-// Create a new user with name and passcode
+// Create a new user with name and passcode — starts as pending until approved
 export const createUser = mutation({
   args: {
     name: v.string(),
@@ -107,6 +115,13 @@ export const createUser = mutation({
 
     const existingUser = await findByName(ctx, normalizedName);
     if (existingUser) {
+      const status = userStatus(existingUser);
+      if (status === "pending") {
+        throw new Error("That name is already waiting for approval!");
+      }
+      if (status === "rejected") {
+        throw new Error("That name can't be used — try a different one!");
+      }
       throw new Error("Username already taken");
     }
 
@@ -114,15 +129,34 @@ export const createUser = mutation({
       throw new Error("Passcode must be 6 digits");
     }
 
+    // Bound pending signups so the approval inbox can't be flooded
+    const allUsers = await ctx.db.query("users").collect();
+    const pendingCount = allUsers.filter(
+      (u) => u.status === "pending",
+    ).length;
+    if (pendingCount >= MAX_PENDING_SIGNUPS) {
+      throw new Error("Too many new players right now — try again later!");
+    }
+
+    const approvalToken = crypto.randomUUID() + crypto.randomUUID();
     const userId = await ctx.db.insert("users", {
       name: normalizedName,
       pinHash: await hashPin(args.pin),
       avatar: args.avatar,
+      status: "pending",
+      approvalToken,
       createdAt: Date.now(),
       lastActiveAt: Date.now(),
     });
 
-    return userId;
+    // Email the admin an approve/deny link (no-ops if env not configured)
+    await ctx.scheduler.runAfter(
+      0,
+      internal.emails.sendSignupApproval,
+      { userId },
+    );
+
+    return { userId, status: "pending" as const };
   },
 });
 
@@ -140,6 +174,14 @@ export const loginUser = mutation({
     const user = await findByName(ctx, normalizedName);
     if (!user) {
       throw new Error("User not found");
+    }
+
+    const status = userStatus(user);
+    if (status === "pending") {
+      throw new Error("Waiting for a grown-up to approve your account!");
+    }
+    if (status === "rejected") {
+      throw new Error("This account wasn't approved — ask a grown-up!");
     }
 
     const pinOk = user.pinHash
@@ -203,11 +245,81 @@ export const updateAvatar = mutation({
   },
 });
 
-// Get all users (for the profile picker - public fields only)
+// Get all users (for the profile picker - approved only, public fields only)
 export const getAllUsers = query({
   args: {},
   handler: async (ctx) => {
-    const users = await ctx.db.query("users").order("desc").take(20);
-    return users.map(publicUser);
+    const users = await ctx.db.query("users").order("desc").take(50);
+    return users.filter((u) => userStatus(u) === "approved").map(publicUser);
+  },
+});
+
+// Fetch a pending signup for the approval email (internal only)
+export const getPendingById = internalQuery({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId);
+    if (!user || userStatus(user) !== "pending" || !user.approvalToken) {
+      return null;
+    }
+    return {
+      name: user.name,
+      avatar: user.avatar,
+      approvalToken: user.approvalToken,
+      createdAt: user.createdAt,
+    };
+  },
+});
+
+// Look up a pending user by their one-time approval token (internal — used by
+// the /signup-approval HTTP endpoint to render the confirmation page)
+export const getByApprovalToken = internalQuery({
+  args: { token: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_approval_token", (q) =>
+        q.eq("approvalToken", args.token),
+      )
+      .first();
+    if (!user) return null;
+    return {
+      _id: user._id,
+      name: user.name,
+      avatar: user.avatar,
+      status: userStatus(user),
+      createdAt: user.createdAt,
+    };
+  },
+});
+
+// Approve or deny a signup from the emailed link (internal — single-use token)
+export const resolveApproval = internalMutation({
+  args: {
+    token: v.string(),
+    action: v.union(v.literal("approve"), v.literal("deny")),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_approval_token", (q) =>
+        q.eq("approvalToken", args.token),
+      )
+      .first();
+    if (!user) {
+      return { ok: false as const, reason: "invalid" as const };
+    }
+    if (userStatus(user) !== "pending") {
+      return {
+        ok: false as const,
+        reason: "already_resolved" as const,
+        name: user.name,
+      };
+    }
+    await ctx.db.patch(user._id, {
+      status: args.action === "approve" ? "approved" : "rejected",
+      approvalToken: undefined, // token is single-use
+    });
+    return { ok: true as const, action: args.action, name: user.name };
   },
 });

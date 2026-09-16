@@ -56,7 +56,12 @@ interface UserContextType {
   isRecording: boolean; // True when saving game progress
   pendingSession: PendingSession | null;
   login: (name: string, pin: string, avatar?: string) => Promise<void>;
-  signup: (name: string, pin: string, avatar?: string) => Promise<void>;
+  /** Returns "pending" if the account needs grown-up approval before login */
+  signup: (
+    name: string,
+    pin: string,
+    avatar?: string,
+  ) => Promise<"pending" | "approved">;
   loginWithId: (id: Id<"users">, name: string, avatar?: string) => void;
   logout: () => void;
   recordGame: (
@@ -104,20 +109,22 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  // Sign up a new user
+  // Sign up a new user — accounts start pending until a grown-up approves
   const signup = useCallback(
     async (name: string, pin: string, avatar?: string) => {
       setIsLoading(true);
       try {
-        const id = await createUserMutation({ name, pin, avatar });
+        const result = await createUserMutation({ name, pin, avatar });
+        if (result.status === "pending") return "pending";
         const normalizedName = name.toLowerCase().trim();
-        setUserId(id);
+        setUserId(result.userId);
         setUserName(normalizedName);
         setUserAvatar(avatar ?? null);
         localStorage.setItem(
           USER_STORAGE_KEY,
-          JSON.stringify({ name: normalizedName, avatar, id }),
+          JSON.stringify({ name: normalizedName, avatar, id: result.userId }),
         );
+        return "approved";
       } finally {
         setIsLoading(false);
       }

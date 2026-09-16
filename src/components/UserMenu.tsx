@@ -31,7 +31,7 @@ const PROFILE_COLORS = [
   "from-indigo-400 to-violet-500",
 ];
 
-type AuthMode = "profiles" | "pin" | "signup";
+type AuthMode = "profiles" | "pin" | "signup" | "pending";
 
 export function UserMenu() {
   const { isLoggedIn, userName, userAvatar, login, signup, logout, isLoading } =
@@ -93,9 +93,12 @@ export function UserMenu() {
         toast.success("Welcome back!");
         handleClose(false);
       } catch (err) {
-        setError("Incorrect passcode. Try again!");
+        const msg = err instanceof Error ? err.message : "";
+        const isApprovalMsg =
+          msg.toLowerCase().includes("approv") || msg.includes("grown-up");
+        setError(isApprovalMsg ? msg : "Incorrect passcode. Try again!");
         setPin("");
-        setTimeout(() => setError(""), 2000);
+        if (!isApprovalMsg) setTimeout(() => setError(""), 2000);
       } finally {
         setIsSubmitting(false);
       }
@@ -114,9 +117,17 @@ export function UserMenu() {
     setIsSubmitting(true);
     setError("");
     try {
-      await signup(signupName.trim(), signupPin, signupAvatar);
-      toast.success("Account created! Your progress will be saved.");
-      handleClose(false);
+      const status = await signup(
+        signupName.trim(),
+        signupPin,
+        signupAvatar,
+      );
+      if (status === "pending") {
+        setAuthMode("pending");
+      } else {
+        toast.success("Account created! Your progress will be saved.");
+        handleClose(false);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create account");
     } finally {
@@ -410,6 +421,33 @@ export function UserMenu() {
                   {isSubmitting
                     ? "Creating…"
                     : `Create Account ${signupAvatar}`}
+                </Button>
+              </div>
+            </>
+          )}
+
+          {authMode === "pending" && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-center text-2xl">
+                  Almost there! ⏳
+                </DialogTitle>
+              </DialogHeader>
+              <div className="text-center space-y-3 py-4">
+                <div className="text-5xl" aria-hidden="true">
+                  {signupAvatar}
+                </div>
+                <p className="text-muted-foreground">
+                  Hi <strong className="capitalize">{signupName.trim()}</strong>!
+                  A grown-up needs to approve your account before you can play.
+                  Come back soon!
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleClose(false)}
+                >
+                  Got it!
                 </Button>
               </div>
             </>

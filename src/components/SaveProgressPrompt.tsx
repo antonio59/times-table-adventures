@@ -119,15 +119,24 @@ export function SaveProgressPrompt({
     setError("");
 
     try {
-      const userId = await createUser({
+      const result = await createUser({
         name: name.trim(),
         pin,
         avatar: selectedAvatar,
       });
 
-      await saveProgress(userId);
+      await saveProgress(result.userId);
 
-      loginWithId(userId, name.trim(), selectedAvatar);
+      if (result.status === "pending") {
+        toast.info(
+          "Account created! A grown-up needs to approve it before you can sign in.",
+          { duration: 6000 },
+        );
+        onClose();
+        return;
+      }
+
+      loginWithId(result.userId, name.trim(), selectedAvatar);
       toast.success("Account created and progress saved!");
       onClose();
     } catch (err) {

@@ -10,7 +10,9 @@
 
 import type * as achievements from "../achievements.js";
 import type * as constants from "../constants.js";
+import type * as emails from "../emails.js";
 import type * as gameSessions from "../gameSessions.js";
+import type * as http from "../http.js";
 import type * as tableMastery from "../tableMastery.js";
 import type * as users from "../users.js";
 
@@ -23,7 +25,9 @@ import type {
 declare const fullApi: ApiFromModules<{
   achievements: typeof achievements;
   constants: typeof constants;
+  emails: typeof emails;
   gameSessions: typeof gameSessions;
+  http: typeof http;
   tableMastery: typeof tableMastery;
   users: typeof users;
 }>;

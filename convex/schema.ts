@@ -8,9 +8,19 @@ export default defineSchema({
     pin: v.optional(v.string()), // legacy plaintext passcode - migrated to pinHash on login
     pinHash: v.optional(v.string()), // SHA-256 hash of the passcode
     avatar: v.optional(v.string()), // emoji or color for avatar
+    status: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("approved"),
+        v.literal("rejected"),
+      ),
+    ), // undefined = approved (accounts created before approval existed)
+    approvalToken: v.optional(v.string()), // single-use token for the approve/deny email link
     createdAt: v.number(),
     lastActiveAt: v.number(),
-  }).index("by_name", ["name"]),
+  })
+    .index("by_name", ["name"])
+    .index("by_approval_token", ["approvalToken"]),
 
   // Rate limiting for passcode attempts (per user name)
   loginAttempts: defineTable({
