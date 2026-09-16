@@ -240,6 +240,7 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 
 ### Chores
 
+- Fix all Dependabot vulnerabilities via overrides
 - Migrate to pnpm v11
 - Migrate fully from bun to pnpm (CI, docs)
 - Add git-cliff config for changelog generation
@@ -249,6 +250,7 @@ X-Lovable-Edit-ID: edt-fe2603e6-b627-4895-8ebb-c430ca5b418c
 
 ### Documentation
 
+- Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
 - Update changelog [skip ci]
