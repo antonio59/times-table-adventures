@@ -5,10 +5,18 @@ export default defineSchema({
   // Users table - name + PIN for kid-friendly authentication
   users: defineTable({
     name: v.string(),
-    pin: v.optional(v.string()), // 4-digit PIN for account recovery (optional for legacy users)
+    pin: v.optional(v.string()), // legacy plaintext passcode - migrated to pinHash on login
+    pinHash: v.optional(v.string()), // SHA-256 hash of the passcode
     avatar: v.optional(v.string()), // emoji or color for avatar
     createdAt: v.number(),
     lastActiveAt: v.number(),
+  }).index("by_name", ["name"]),
+
+  // Rate limiting for passcode attempts (per user name)
+  loginAttempts: defineTable({
+    name: v.string(),
+    failedAttempts: v.number(),
+    windowStart: v.number(), // epoch ms when the current window started
   }).index("by_name", ["name"]),
 
   // Game sessions - tracks each game played
@@ -27,6 +35,8 @@ export default defineSchema({
       v.literal("daily"),
       v.literal("bonds"),
       v.literal("truefalse"),
+      v.literal("array"),
+      v.literal("family"),
     ),
     tablesUsed: v.array(v.number()), // which times tables were practiced
     score: v.number(),

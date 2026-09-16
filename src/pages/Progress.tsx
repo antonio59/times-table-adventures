@@ -138,7 +138,7 @@ const Progress = () => {
                 .map((table) => (
                   <div
                     key={table.tableNumber}
-                    className={`rounded-xl p-3 border-2 text-center transition-all ${
+                    className={`rounded-xl p-3 border-2 text-center transition ${
                       MASTERY_COLORS[table.masteryLevel]
                     }`}
                   >
@@ -196,7 +196,7 @@ const Progress = () => {
             {achievements?.map((achievement) => (
               <div
                 key={achievement.type}
-                className={`rounded-xl p-4 text-center border transition-all ${
+                className={`rounded-xl p-4 text-center border transition ${
                   achievement.earned
                     ? "bg-secondary/10 border-secondary/30"
                     : "bg-muted/30 border-transparent opacity-50"

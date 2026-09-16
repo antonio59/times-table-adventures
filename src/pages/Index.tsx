@@ -17,6 +17,9 @@ import {
   Calendar,
   Link2,
   ThumbsUp,
+  LayoutGrid,
+  Home,
+  ExternalLink,
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
@@ -42,7 +45,7 @@ const FeatureCard = ({
 }) => (
   <Link to={to} className="block group">
     <div
-      className={`bg-card rounded-xl sm:rounded-2xl shadow-card border border-border hover:border-primary transition-all duration-300 hover:shadow-glow-primary hover:-translate-y-1 sm:hover:-translate-y-2 animate-pop h-full ${
+      className={`bg-card rounded-xl sm:rounded-2xl shadow-card border border-border hover:border-primary transition duration-300 hover:shadow-glow-primary hover:-translate-y-1 sm:hover:-translate-y-2 animate-pop h-full ${
         compact ? "p-3 sm:p-4" : "p-4 sm:p-6"
       }`}
       style={{ animationDelay: delay }}
@@ -178,7 +181,7 @@ const Index = () => {
         {/* Daily Challenge Feature */}
         <section className="py-8">
           <Link to="/daily" className="block group">
-            <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 rounded-3xl p-6 md:p-8 border-2 border-primary/30 hover:border-primary transition-all duration-300 hover:shadow-glow-primary">
+            <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 rounded-3xl p-6 md:p-8 border-2 border-primary/30 hover:border-primary transition duration-300 hover:shadow-glow-primary">
               <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center shadow-soft group-hover:scale-110 transition-transform duration-300">
                   <Calendar className="w-10 h-10 text-primary-foreground" />
@@ -314,6 +317,24 @@ const Index = () => {
               delay="0.5s"
               compact
             />
+            <FeatureCard
+              icon={LayoutGrid}
+              title="Array Builder"
+              description="See times tables as groups"
+              to="/array"
+              variant="fun"
+              delay="0.55s"
+              compact
+            />
+            <FeatureCard
+              icon={Home}
+              title="Fact Family"
+              description="Multiply & divide together"
+              to="/family"
+              variant="success"
+              delay="0.6s"
+              compact
+            />
           </div>
         </section>
 
@@ -376,7 +397,7 @@ const Index = () => {
               </div>
               <div>
                 <div className="text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">
-                  12
+                  14
                 </div>
                 <p className="text-xs sm:text-sm text-muted-foreground">
                   Games
@@ -384,6 +405,41 @@ const Index = () => {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* SatsQuest promo */}
+        <section className="py-8">
+          <a
+            href="https://satsquest.antoniosmith.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block group"
+          >
+            <div className="bg-gradient-to-r from-accent/10 via-primary/10 to-secondary/10 rounded-3xl p-6 md:p-8 border-2 border-accent/30 hover:border-accent transition duration-300 hover:shadow-glow-primary">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="w-20 h-20 rounded-2xl gradient-fun flex items-center justify-center shadow-soft group-hover:scale-110 transition-transform duration-300 shrink-0">
+                  <Sparkles className="w-10 h-10 text-primary-foreground" />
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <div className="inline-flex items-center gap-2 bg-accent/20 text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold mb-2">
+                    <Star className="w-3 h-3" />
+                    <span>From the same family!</span>
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-extrabold mb-2">
+                    Ready for SATs? Try SatsQuest!
+                  </h2>
+                  <p className="text-muted-foreground">
+                    Our sister app for SATs practice - maths, reading and more,
+                    made just for kids like you.
+                  </p>
+                </div>
+                <span className="inline-flex items-center gap-2 h-14 rounded-2xl px-8 text-lg font-bold gradient-fun text-accent-foreground shadow-soft group-hover:scale-105 transition-transform shrink-0">
+                  <ExternalLink className="w-5 h-5" aria-hidden="true" />
+                  Visit SatsQuest
+                </span>
+              </div>
+            </div>
+          </a>
         </section>
       </div>
     </Layout>

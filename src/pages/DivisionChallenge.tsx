@@ -399,7 +399,7 @@ const DivisionChallenge = () => {
               </div>
               <div className="h-3 bg-muted rounded-full overflow-hidden">
                 <div
-                  className="h-full gradient-secondary transition-all duration-300"
+                  className="h-full gradient-secondary transition-[width] duration-300"
                   style={{
                     width: `${((currentIndex + 1) / questions.length) * 100}%`,
                   }}
@@ -444,7 +444,7 @@ const DivisionChallenge = () => {
                       key={idx}
                       variant="game"
                       size="lg"
-                      className={`text-2xl font-bold transition-all ${
+                      className={`text-2xl font-bold transition ${
                         showAsCorrect
                           ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
                           : showAsWrong

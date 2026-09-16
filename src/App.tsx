@@ -23,6 +23,8 @@ const TimesTableClimb = lazy(() => import("./pages/TimesTableClimb"));
 const DailyChallenge = lazy(() => import("./pages/DailyChallenge"));
 const NumberBonds = lazy(() => import("./pages/NumberBonds"));
 const TrueFalse = lazy(() => import("./pages/TrueFalse"));
+const ArrayBuilder = lazy(() => import("./pages/ArrayBuilder"));
+const FactFamily = lazy(() => import("./pages/FactFamily"));
 const Tips = lazy(() => import("./pages/Tips"));
 const Progress = lazy(() => import("./pages/Progress"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -32,7 +34,7 @@ const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary/5 to-secondary/5">
     <div className="text-center">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-      <p className="text-muted-foreground">Loading...</p>
+      <p className="text-muted-foreground">Loading…</p>
     </div>
   </div>
 );
@@ -63,6 +65,8 @@ const App = () => (
                   <Route path="/daily" element={<DailyChallenge />} />
                   <Route path="/bonds" element={<NumberBonds />} />
                   <Route path="/truefalse" element={<TrueFalse />} />
+                  <Route path="/array" element={<ArrayBuilder />} />
+                  <Route path="/family" element={<FactFamily />} />
                   <Route path="/tips" element={<Tips />} />
                   <Route path="/print" element={<Print />} />
                   <Route path="/progress" element={<Progress />} />

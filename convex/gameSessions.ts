@@ -15,6 +15,8 @@ const gameTypeValidator = v.union(
   v.literal("daily"),
   v.literal("bonds"),
   v.literal("truefalse"),
+  v.literal("array"),
+  v.literal("family"),
 );
 
 // Record a completed game session
@@ -30,6 +32,27 @@ export const recordSession = mutation({
     timeSpent: v.number(),
   },
   handler: async (ctx, args) => {
+    // Sanity-check the session payload
+    const allValid = [
+      args.score,
+      args.totalQuestions,
+      args.correctAnswers,
+      args.bestStreak,
+      args.timeSpent,
+    ].every((n) => Number.isFinite(n) && n >= 0);
+    if (!allValid) {
+      throw new Error("Invalid session data");
+    }
+    if (
+      args.correctAnswers > args.totalQuestions ||
+      args.bestStreak > args.totalQuestions ||
+      args.totalQuestions > 10000 ||
+      args.score > 1000000 ||
+      args.timeSpent > 24 * 60 * 60
+    ) {
+      throw new Error("Invalid session data");
+    }
+
     const sessionId = await ctx.db.insert("gameSessions", {
       ...args,
       completedAt: Date.now(),

@@ -624,7 +624,7 @@ const Quiz = () => {
                       <Button
                         variant="game"
                         size="lg"
-                        className={`w-full text-xl sm:text-2xl font-bold transition-all relative min-h-[56px] sm:min-h-[64px] ${
+                        className={`w-full text-xl sm:text-2xl font-bold transition relative min-h-[56px] sm:min-h-[64px] ${
                           showAsCorrect
                             ? "!border-success !bg-success/10 !shadow-[0_0_20px_hsl(var(--success)/0.3)]"
                             : showAsWrong

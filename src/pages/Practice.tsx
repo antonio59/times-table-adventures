@@ -4,9 +4,17 @@ import Layout from "@/components/layout/Layout";
 import { useUser } from "@/contexts/UserContext";
 import { useSound } from "@/contexts/SoundContext";
 import { SaveProgressPrompt } from "@/components/SaveProgressPrompt";
+import { SolutionExplainer } from "@/components/SolutionExplainer";
 import { toast } from "sonner";
 import { ALL_TABLES_WITH_ONE, MULTIPLIER_OPTIONS } from "@/lib/constants";
-import { Check, X, RotateCcw, Sparkles, Save } from "lucide-react";
+import {
+  Check,
+  X,
+  RotateCcw,
+  Sparkles,
+  Save,
+  Lightbulb,
+} from "lucide-react";
 
 interface Question {
   a: number;
@@ -39,8 +47,16 @@ const Practice = () => {
     { tableNumber: number; correct: boolean; timeMs: number }[]
   >([]);
   const [showSavePrompt, setShowSavePrompt] = useState(false);
+  const [showExplainer, setShowExplainer] = useState(false);
   const questionStartTime = useRef<number>(Date.now());
   const sessionStartTime = useRef<number>(Date.now());
+  const advanceTimeout = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimeout.current) clearTimeout(advanceTimeout.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (selectedTables.length > 0) {
@@ -89,12 +105,27 @@ const Practice = () => {
       setStreak(0);
     }
 
-    setTimeout(() => {
-      setShowResult(null);
-      setUserAnswer("");
-      setQuestion(generateQuestion(selectedTables, maxMultiplier));
-      questionStartTime.current = Date.now();
+    advanceTimeout.current = window.setTimeout(() => {
+      advanceTimeout.current = null;
+      nextQuestion();
     }, 1500);
+  };
+
+  const nextQuestion = () => {
+    setShowResult(null);
+    setShowExplainer(false);
+    setUserAnswer("");
+    setQuestion(generateQuestion(selectedTables, maxMultiplier));
+    questionStartTime.current = Date.now();
+  };
+
+  // Pause auto-advance so the player can study the worked solution
+  const openExplainer = () => {
+    if (advanceTimeout.current) {
+      clearTimeout(advanceTimeout.current);
+      advanceTimeout.current = null;
+    }
+    setShowExplainer(true);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -150,7 +181,7 @@ const Practice = () => {
     sessionStartTime.current = Date.now();
     questionStartTime.current = Date.now();
     if (selectedTables.length > 0) {
-      setQuestion(generateQuestion(selectedTables));
+      setQuestion(generateQuestion(selectedTables, maxMultiplier));
     }
   };
 
@@ -231,7 +262,7 @@ const Practice = () => {
           </div>
         ) : (
           <div
-            className={`bg-card rounded-3xl p-8 shadow-card border-2 transition-all duration-300 ${
+            className={`bg-card rounded-3xl p-8 shadow-card border-2 transition duration-300 ${
               showResult === "correct"
                 ? "border-success shadow-[0_0_30px_hsl(var(--success)/0.3)]"
                 : showResult === "wrong"
@@ -263,23 +294,49 @@ const Practice = () => {
                   />
 
                   {showResult ? (
-                    <div
-                      className={`flex items-center gap-2 text-xl font-bold ${
-                        showResult === "correct"
-                          ? "text-success"
-                          : "text-destructive"
-                      }`}
-                    >
-                      {showResult === "correct" ? (
+                    <div className="flex flex-col items-center gap-3 w-full">
+                      <div
+                        className={`flex items-center gap-2 text-xl font-bold ${
+                          showResult === "correct"
+                            ? "text-success"
+                            : "text-destructive"
+                        }`}
+                        role="status"
+                      >
+                        {showResult === "correct" ? (
+                          <>
+                            <Check className="w-6 h-6" aria-hidden="true" />
+                            Correct!{" "}
+                            <Sparkles className="w-5 h-5" aria-hidden="true" />
+                          </>
+                        ) : (
+                          <>
+                            <X className="w-6 h-6" aria-hidden="true" />
+                            It's {question.answer}
+                          </>
+                        )}
+                      </div>
+
+                      {showExplainer ? (
                         <>
-                          <Check className="w-6 h-6" />
-                          Correct! <Sparkles className="w-5 h-5" />
+                          <SolutionExplainer a={question.a} b={question.b} />
+                          <Button onClick={nextQuestion} size="lg">
+                            Next Question
+                          </Button>
                         </>
                       ) : (
-                        <>
-                          <X className="w-6 h-6" />
-                          It's {question.answer}
-                        </>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={openExplainer}
+                          className="text-muted-foreground hover:text-foreground"
+                        >
+                          <Lightbulb
+                            className="w-4 h-4 mr-1"
+                            aria-hidden="true"
+                          />
+                          Show me how to solve it
+                        </Button>
                       )}
                     </div>
                   ) : (

@@ -269,7 +269,7 @@ const MemoryMatch = () => {
                   key={card.id}
                   onClick={() => handleCardClick(card.id)}
                   disabled={card.isFlipped || card.isMatched || isChecking}
-                  className={`aspect-square rounded-2xl text-lg md:text-xl font-bold transition-all duration-300 transform ${
+                  className={`aspect-square rounded-2xl text-lg md:text-xl font-bold transition duration-300 transform ${
                     card.isMatched
                       ? "bg-success/20 border-2 border-success text-success scale-95"
                       : card.isFlipped

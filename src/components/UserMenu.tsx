@@ -228,7 +228,7 @@ export function UserMenu() {
                   {[...Array(PIN_LENGTH)].map((_, i) => (
                     <div
                       key={i}
-                      className={`w-4 h-4 rounded-full transition-all duration-300 ${
+                      className={`w-4 h-4 rounded-full transition duration-300 ${
                         i < pin.length
                           ? "bg-primary scale-110"
                           : "bg-muted"
@@ -300,7 +300,7 @@ export function UserMenu() {
                       key={avatar}
                       type="button"
                       onClick={() => setSignupAvatar(avatar)}
-                      className={`text-xl sm:text-2xl p-2 min-w-[44px] min-h-[44px] rounded-lg transition-all flex items-center justify-center ${
+                      className={`text-xl sm:text-2xl p-2 min-w-[44px] min-h-[44px] rounded-lg transition flex items-center justify-center ${
                         signupAvatar === avatar
                           ? "bg-primary/20 ring-2 ring-primary scale-110"
                           : "hover:bg-muted active:bg-muted"
@@ -314,17 +314,24 @@ export function UserMenu() {
 
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label
+                    htmlFor="signup-name"
+                    className="block text-sm font-medium mb-1"
+                  >
                     Your name
                   </label>
                   <input
+                    id="signup-name"
                     type="text"
+                    name="player-name"
+                    autoComplete="off"
+                    spellCheck={false}
                     value={signupName}
                     onChange={(e) => {
                       setSignupName(e.target.value);
                       setError("");
                     }}
-                    placeholder="Enter your name..."
+                    placeholder="Enter your name…"
                     className="w-full h-11 px-4 text-lg border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background"
                     autoFocus
                     maxLength={20}
@@ -332,36 +339,48 @@ export function UserMenu() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label
+                    htmlFor="signup-pin"
+                    className="block text-sm font-medium mb-1"
+                  >
                     Create a 6-digit passcode
                   </label>
                   <input
+                    id="signup-pin"
                     type="password"
+                    name="new-passcode"
+                    autoComplete="new-password"
                     inputMode="numeric"
                     value={signupPin}
                     onChange={(e) => {
                       setSignupPin(
-                        e.target.value.replace(/\D/g, "").slice(0, 4)
+                        e.target.value.replace(/\D/g, "").slice(0, PIN_LENGTH)
                       );
                       setError("");
                     }}
-                    placeholder="Enter 6 digits..."
+                    placeholder="Enter 6 digits…"
                     className="w-full h-11 px-4 text-2xl text-center tracking-[0.5em] border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background font-mono"
                     maxLength={6}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label
+                    htmlFor="signup-pin-confirm"
+                    className="block text-sm font-medium mb-1"
+                  >
                     Confirm passcode
                   </label>
                   <input
+                    id="signup-pin-confirm"
                     type="password"
+                    name="confirm-passcode"
+                    autoComplete="new-password"
                     inputMode="numeric"
                     value={signupPinConfirm}
                     onChange={(e) => {
                       setSignupPinConfirm(
-                        e.target.value.replace(/\D/g, "").slice(0, 6)
+                        e.target.value.replace(/\D/g, "").slice(0, PIN_LENGTH)
                       );
                       setError("");
                     }}
@@ -383,13 +402,13 @@ export function UserMenu() {
                   className="w-full"
                   disabled={
                     !signupName.trim() ||
-                    signupPin.length !== 4 ||
-                    signupPinConfirm.length !== 4 ||
+                    signupPin.length !== PIN_LENGTH ||
+                    signupPinConfirm.length !== PIN_LENGTH ||
                     isSubmitting
                   }
                 >
                   {isSubmitting
-                    ? "Creating..."
+                    ? "Creating…"
                     : `Create Account ${signupAvatar}`}
                 </Button>
               </div>

@@ -85,7 +85,7 @@ const Tables = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.2 }}
-                className="bg-card rounded-xl p-3 shadow-soft border border-border hover:border-primary transition-all duration-200"
+                className="bg-card rounded-xl p-3 shadow-soft border border-border hover:border-primary transition duration-200"
               >
                 <div className="flex items-center gap-2 mb-2 pb-2 border-b border-border">
                   <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">

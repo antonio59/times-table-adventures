@@ -351,7 +351,7 @@ const DailyChallenge = () => {
               initial={{ x: 50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className={`bg-card rounded-3xl p-8 shadow-card border-2 transition-all duration-300 ${
+              className={`bg-card rounded-3xl p-8 shadow-card border-2 transition duration-300 ${
                 showResult === "correct"
                   ? "border-success shadow-[0_0_30px_hsl(var(--success)/0.3)]"
                   : showResult === "wrong"

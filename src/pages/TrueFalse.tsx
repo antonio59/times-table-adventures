@@ -459,7 +459,7 @@ const TrueFalse = () => {
                     <Button
                       variant="game"
                       size="lg"
-                      className={`w-full min-h-[70px] sm:min-h-[80px] text-xl sm:text-2xl font-bold transition-all ${
+                      className={`w-full min-h-[70px] sm:min-h-[80px] text-xl sm:text-2xl font-bold transition ${
                         selectedAnswer === true
                           ? currentQuestion.isCorrect
                             ? "!border-success !bg-success/20"
@@ -491,7 +491,7 @@ const TrueFalse = () => {
                     <Button
                       variant="game"
                       size="lg"
-                      className={`w-full min-h-[70px] sm:min-h-[80px] text-xl sm:text-2xl font-bold transition-all ${
+                      className={`w-full min-h-[70px] sm:min-h-[80px] text-xl sm:text-2xl font-bold transition ${
                         selectedAnswer === false
                           ? !currentQuestion.isCorrect
                             ? "!border-success !bg-success/20"

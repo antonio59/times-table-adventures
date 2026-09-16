@@ -22,7 +22,9 @@ type GameType =
   | "pattern"
   | "daily"
   | "bonds"
-  | "truefalse";
+  | "truefalse"
+  | "array"
+  | "family";
 
 export interface GameSession {
   gameType: GameType;

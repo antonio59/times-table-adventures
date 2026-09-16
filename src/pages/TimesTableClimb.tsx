@@ -317,7 +317,7 @@ const TimesTableClimb = () => {
                   <div className="absolute top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[30px] border-r-[30px] border-b-[60px] border-l-transparent border-r-transparent border-b-white" />
                   {/* Climber */}
                   <div
-                    className="absolute left-1/2 -translate-x-1/2 text-3xl transition-all duration-500"
+                    className="absolute left-1/2 -translate-x-1/2 text-3xl transition-[bottom] duration-500"
                     style={{ bottom: `${Math.min(heightPercentage, 90)}%` }}
                   >
                     🧗
@@ -366,7 +366,7 @@ const TimesTableClimb = () => {
 
             {/* Question */}
             <div
-              className={`bg-card rounded-3xl p-6 shadow-card border border-border transition-all ${showWrong ? "border-destructive bg-destructive/5 animate-shake" : ""}`}
+              className={`bg-card rounded-3xl p-6 shadow-card border border-border transition ${showWrong ? "border-destructive bg-destructive/5 animate-shake" : ""}`}
             >
               <div className="text-center">
                 <div className="text-5xl md:text-6xl font-extrabold mb-4">

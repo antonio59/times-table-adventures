@@ -6,7 +6,7 @@ A fun, interactive times table learning app for kids! Built with React 19, TypeS
 
 ## Features
 
-### Games & Practice Modes (12 Games!)
+### Games & Practice Modes (14 Games!)
 
 - **Quiz Challenge** - Multiple choice questions with customizable time limits
 - **Speed Race** - Answer as many as you can in 60 seconds
@@ -20,6 +20,8 @@ A fun, interactive times table learning app for kids! Built with React 19, TypeS
 - **Daily Challenge** - Unique daily puzzle with streak tracking
 - **Number Bonds** - Find the factors that multiply to make a product
 - **True or False** - Quick-fire equation verification with optional timed mode
+- **Array Builder** - See multiplication as rows of objects - count the array or match the equation
+- **Fact Family** - Complete the four related multiply & divide facts for each family
 
 ### Progress Tracking (Optional)
 
@@ -47,7 +49,7 @@ A fun, interactive times table learning app for kids! Built with React 19, TypeS
 - **Animations**: Framer Motion, canvas-confetti
 - **Backend**: Convex (real-time database)
 | **Package Manager** | pnpm |
-| **Hosting** | Netlify |
+| **Hosting** | Cloudflare Workers (static assets) |
 
 ## Getting Started
 
@@ -161,7 +163,9 @@ times-table-adventures/
 │   └── install-native-deps.js  # Bun native deps workaround
 ├── .github/
 │   └── workflows/         # CI/CD pipelines
-├── netlify.toml           # Netlify configuration
+├── workers/
+│   └── index.ts           # Cloudflare Worker: security headers + SPA assets
+├── wrangler.jsonc         # Cloudflare Workers configuration
 └── package.json
 ```
 
@@ -169,17 +173,19 @@ times-table-adventures/
 
 ### Users
 
-Simple name-based profiles (no passwords needed for kids):
+Simple name-based profiles with a 6-digit passcode (stored as a SHA-256
+hash, never returned to the client):
 
 - `name` - Display name
 - `avatar` - Emoji avatar
+- `pinHash` - Hashed passcode
 - `createdAt`, `lastActiveAt`
 
 ### Game Sessions
 
 Tracks each game played:
 
-- `gameType` - quiz, practice, speed, memory, missing, stories, climb, division, pattern, daily, bonds, truefalse
+- `gameType` - quiz, practice, speed, memory, missing, stories, climb, division, pattern, daily, bonds, truefalse, array, family
 - `score`, `correctAnswers`, `totalQuestions`
 - `bestStreak`, `timeSpent`
 - `tablesUsed` - Which times tables were practiced
@@ -203,32 +209,42 @@ Per-table proficiency tracking:
 
 ## Deployment
 
-### Netlify (Recommended)
+### Cloudflare Workers
 
-The project is configured for Netlify deployment:
+The frontend is a static Vite build served by a Cloudflare Worker with
+static assets (`wrangler.jsonc`). The Worker injects security headers
+(CSP, X-Frame-Options, Referrer-Policy, Permissions-Policy) and serves
+`dist/` with single-page-application fallback. The site is routed at
+`ttf.antoniosmith.xyz/*` via a Worker route on the `antoniosmith.xyz` zone.
 
-1. **Connect your GitHub repo to Netlify**
-2. **Set environment variables in Netlify**:
-   - `VITE_CONVEX_URL` - Your Convex deployment URL
-   - Build settings are auto-detected from `netlify.toml`:
-   - Build command: `pnpm run build`
-   - Publish directory: `dist`
+1. **Authenticate**: `npx wrangler login`
+2. **Build & deploy**:
+
+   ```bash
+   pnpm run build
+   pnpm exec wrangler deploy
+   ```
+
+   The route pattern lives in `wrangler.jsonc`. If you ever delete the
+   existing `ttf` DNS record, switch the route to
+   `{ "pattern": "ttf.antoniosmith.xyz", "custom_domain": true }` first so
+   Cloudflare manages the hostname directly.
 
 ### GitHub Actions CI/CD
 
 The project includes automated CI/CD workflows using pnpm:
 
-- **CI** (`ci.yml`) - Runs on PRs: linting, type checking, and build
-- **Deploy** (`deploy.yml`) - Runs on push to main: deploys Convex backend and frontend to Netlify
+- **CI** (`ci.yml`) - Runs on PRs: linting, type checking (`tsc -b`), and build
+- **Deploy** (`deploy.yml`) - Runs on push to main: deploys Convex backend and the frontend to Cloudflare Workers
 
 #### Required GitHub Secrets
 
-| Secret               | Description                                                                                                         |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `VITE_CONVEX_URL`    | Your Convex deployment URL (e.g., `https://silent-wolf-650.convex.cloud`)                                           |
-| `CONVEX_DEPLOY_KEY`  | Convex deploy key for CI/CD                                                                                         |
-| `NETLIFY_AUTH_TOKEN` | Netlify personal access token ([create one here](https://app.netlify.com/user/applications#personal-access-tokens)) |
-| `NETLIFY_SITE_ID`    | Your Netlify site ID (found in Site Settings > General)                                                             |
+| Secret                   | Description                                                                                          |
+| ------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `VITE_CONVEX_URL`        | Your Convex deployment URL (e.g., `https://silent-wolf-650.convex.cloud`)                            |
+| `CONVEX_DEPLOY_KEY`      | Convex deploy key for CI/CD                                                                          |
+| `CLOUDFLARE_API_TOKEN`   | Cloudflare API token with Workers Scripts + Workers Routes edit on the `antoniosmith.xyz` zone       |
+| `CLOUDFLARE_ACCOUNT_ID`  | Cloudflare account ID (`772aa0b7e6d07fe0d58345fbd48b26e4`)                                           |
 
 ### Manual Deployment
 
@@ -239,7 +255,8 @@ npx convex deploy
 # Build frontend
 pnpm run build
 
-# The dist/ folder can be deployed to any static host
+# Deploy to Cloudflare Workers (static assets + headers + SPA fallback)
+pnpm exec wrangler deploy
 ```
 
 ## Contributing

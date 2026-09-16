@@ -60,12 +60,13 @@ const generateQuestion = (tables: number[]): Question => {
       }
     }
 
-    const options: [number, number][] = [
+    const unsortedOptions: [number, number][] = [
       [givenFactor, answerFactor],
       [givenFactor, wrongOptions[0]],
       [givenFactor, wrongOptions[1]],
       [givenFactor, wrongOptions[2]],
-    ].sort(() => Math.random() - 0.5);
+    ];
+    const options = [...unsortedOptions].sort(() => Math.random() - 0.5);
 
     return { product, factor1, factor2, options, questionType, givenFactor };
   } else {
@@ -439,7 +440,7 @@ const NumberBonds = () => {
                       <Button
                         variant="game"
                         size="lg"
-                        className={`w-full min-h-[60px] sm:min-h-[70px] text-lg sm:text-xl font-bold transition-all ${
+                        className={`w-full min-h-[60px] sm:min-h-[70px] text-lg sm:text-xl font-bold transition ${
                           showAsCorrect
                             ? "!border-success !bg-success/10"
                             : showAsWrong

@@ -33,6 +33,16 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
       <footer className="py-3 sm:py-4 text-center text-muted-foreground text-xs sm:text-sm no-print">
         <p>Made with 💖 by Uncle Joseph for Cristina</p>
+        <p className="mt-1">
+          <a
+            href="https://satsquest.antoniosmith.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-foreground transition-colors"
+          >
+            Also try SatsQuest for SATs practice →
+          </a>
+        </p>
       </footer>
     </div>
   );

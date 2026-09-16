@@ -245,7 +245,7 @@ export function SaveProgressPrompt({
                     key={avatar}
                     type="button"
                     onClick={() => setSelectedAvatar(avatar)}
-                    className={`text-xl sm:text-2xl p-2 min-w-[44px] min-h-[44px] rounded-lg transition-all flex items-center justify-center ${
+                    className={`text-xl sm:text-2xl p-2 min-w-[44px] min-h-[44px] rounded-lg transition flex items-center justify-center ${
                       selectedAvatar === avatar
                         ? "bg-primary/20 ring-2 ring-primary scale-110"
                         : "hover:bg-muted active:bg-muted"
@@ -258,17 +258,24 @@ export function SaveProgressPrompt({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="save-name"
+                className="block text-sm font-medium mb-2"
+              >
                 Your name
               </label>
               <input
+                id="save-name"
                 type="text"
+                name="player-name"
+                autoComplete="off"
+                spellCheck={false}
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
                   setError("");
                 }}
-                placeholder="Enter your name..."
+                placeholder="Enter your name…"
                 className="w-full h-11 px-4 text-lg border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background"
                 autoFocus
                 maxLength={20}
@@ -281,18 +288,25 @@ export function SaveProgressPrompt({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="save-pin"
+                className="block text-sm font-medium mb-2"
+              >
                 Create a 6-digit passcode
               </label>
               <p className="text-xs text-muted-foreground mb-2">
                 Remember this to sign in later!
               </p>
               <input
-                type="text"
+                id="save-pin"
+                type="password"
+                name="new-passcode"
+                autoComplete="new-password"
                 inputMode="numeric"
                 value={pin}
                 onChange={(e) => handlePinChange(e.target.value)}
-                placeholder="Enter 6 digits..."
+                placeholder="Enter 6 digits…"
+                className="w-full h-11 px-4 text-2xl text-center tracking-[0.5em] border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background font-mono"
                 maxLength={6}
               />
               <div className="flex justify-center gap-2 mt-2">
@@ -323,7 +337,7 @@ export function SaveProgressPrompt({
               }
             >
               <Save className="w-4 h-4 mr-2" />
-              {isSaving ? "Saving..." : `Save Progress ${selectedAvatar}`}
+              {isSaving ? "Saving…" : `Save Progress ${selectedAvatar}`}
             </Button>
           </form>
         )}
@@ -337,17 +351,24 @@ export function SaveProgressPrompt({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="login-name"
+                className="block text-sm font-medium mb-2"
+              >
                 Your name
               </label>
               <input
+                id="login-name"
                 type="text"
+                name="player-name"
+                autoComplete="off"
+                spellCheck={false}
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
                   setError("");
                 }}
-                placeholder="Enter your name..."
+                placeholder="Enter your name…"
                 className="w-full h-11 px-4 text-lg border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background"
                 autoFocus
                 maxLength={20}
@@ -355,18 +376,26 @@ export function SaveProgressPrompt({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Your PIN</label>
+              <label
+                htmlFor="login-pin"
+                className="block text-sm font-medium mb-2"
+              >
+                Your passcode
+              </label>
               <input
-                type="text"
+                id="login-pin"
+                type="password"
+                name="passcode"
+                autoComplete="off"
                 inputMode="numeric"
                 value={pin}
                 onChange={(e) => handlePinChange(e.target.value)}
-                placeholder="Enter your 6-digit passcode..."
+                placeholder="Enter your 6-digit passcode…"
                 className="w-full h-11 px-4 text-2xl text-center tracking-[0.5em] border-2 border-border rounded-xl focus:border-primary focus:outline-none bg-background font-mono"
                 maxLength={6}
               />
               <div className="flex justify-center gap-2 mt-2">
-                {[0, 1, 2, 3].map((i) => (
+                {[0, 1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
                     className={`w-3 h-3 rounded-full transition-colors ${
@@ -388,7 +417,7 @@ export function SaveProgressPrompt({
               disabled={!name.trim() || pin.length !== PIN_LENGTH || isSaving}
             >
               <Save className="w-4 h-4 mr-2" />
-              {isSaving ? "Saving..." : "Sign In & Save"}
+              {isSaving ? "Saving…" : "Sign In & Save"}
             </Button>
           </form>
         )}

@@ -194,7 +194,7 @@ const PatternPuzzle = () => {
               </div>
               <div className="h-3 bg-muted rounded-full overflow-hidden">
                 <div
-                  className="h-full gradient-fun transition-all duration-300"
+                  className="h-full gradient-fun transition-[width] duration-300"
                   style={{
                     width: `${(currentRound / roundsToPlay) * 100}%`,
                   }}
